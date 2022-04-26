@@ -1,4 +1,4 @@
-import { startOfDay, startOfMonth, compareAsc } from "date-fns";
+import { format, startOfDay, startOfMonth, compareAsc } from "date-fns";
 import CalendarDay from "../elements/CalendarDay";
 import { GenerateOneMonth } from "../common/utils/CalendarDateGeneration";
 import { useState } from "react";
@@ -21,10 +21,14 @@ function CalendarBody({ currentDay }) {
 	const [clickedDay, setClickedDay] = useState(false);
 	const [selectedDay, setSelectedDay] = useState(currentDay);
 
-	const onClickCalendarDay = (data) => {
-		console.log(data);
-		setClickedDay((current) => !current);
-		setSelectedDay(data);
+	const onClickCalendarDay = (day) => {
+		if (compareAsc(day, selectedDay) === 0) {
+			setClickedDay((current) => !current);
+		} else {
+			setClickedDay(true);
+			setSelectedDay(day);
+		}
+		console.log(format(day, "d"));
 	};
 
 	return (
@@ -47,14 +51,9 @@ function CalendarBody({ currentDay }) {
 											? true
 											: false
 									}
-									isToday={
-										compareAsc(day.currentDay, startOfDay(TODAY)) === 0
-											? true
-											: false
-									}
-								>
-									{day.currentDay}
-								</CalendarDay>
+									isToday={day.isToday}
+									isCurMonth={day.isCurMonth}
+								></CalendarDay>
 							</td>
 						))}
 					</tr>
