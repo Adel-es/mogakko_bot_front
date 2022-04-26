@@ -1,10 +1,18 @@
-function CalendarHeader({ year, month }) {
+function CalendarHeader({ year, month, CallBackEvent }) {
+	const onClickLeftButton = () => {
+		CallBackEvent({ left: true, right: false });
+		console.log("left button");
+	};
+	const onClickRightButton = () => {
+		CallBackEvent({ left: false, right: true });
+		console.log("right button");
+	};
 	return (
 		<div>
 			<p>{year}</p>
-			<button>&#60;</button>
+			<button onClick={onClickLeftButton}>&#60;</button>
 			<div>{month}</div>
-			<button>&#62;</button>
+			<button onClick={onClickRightButton}>&#62;</button>
 		</div>
 	);
 }
