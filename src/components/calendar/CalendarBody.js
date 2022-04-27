@@ -1,7 +1,8 @@
 import { format, startOfDay, startOfMonth, compareAsc } from "date-fns";
-import CalendarDay from "../elements/CalendarDay";
-import { GenerateOneMonth } from "../common/utils/CalendarDateGeneration";
-import { useState } from "react";
+import CalendarDay from "./CalendarDay";
+import { GenerateOneMonth } from "../../common/utils/CalendarDateGeneration";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 const TODAY = new Date();
 
@@ -15,7 +16,7 @@ const CalendarDaysOfWeek = () => {
 		</tr>
 	);
 };
-function CalendarBody({ currentDay }) {
+function CalendarBody({ currentDay, peopleInfo, CallBackEvent }) {
 	const currentStartDayOfMonth = startOfMonth(currentDay);
 	const daysOfMonth = GenerateOneMonth(currentStartDayOfMonth);
 	const [clickedDay, setClickedDay] = useState(false);
@@ -30,6 +31,10 @@ function CalendarBody({ currentDay }) {
 		}
 		console.log(format(day, "d"));
 	};
+
+	useEffect(() => {
+		CallBackEvent({ selectedDay: selectedDay, dayClicked: clickedDay });
+	}, [clickedDay, selectedDay]);
 
 	return (
 		<table>
@@ -62,4 +67,9 @@ function CalendarBody({ currentDay }) {
 		</table>
 	);
 }
+CalendarBody.propTypes = {
+	currentDay: PropTypes.instanceOf(Date).isRequired,
+	peopleInfo: PropTypes.array,
+	CallBackEvent: PropTypes.func.isRequired,
+};
 export default CalendarBody;

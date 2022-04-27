@@ -1,9 +1,11 @@
-import CalendarHeader from "../elements/CalendarHeader";
-import CalendarBody from "../components/CalendarBody";
-import { startOfYear, startOfMonth, format, sub, add } from "date-fns";
+import CalendarHeader from "./CalendarHeader";
+import CalendarBody from "./CalendarBody";
 import { useState, useEffect } from "react";
+import { startOfYear, startOfMonth, format, sub, add } from "date-fns";
+
 const TODAY = new Date(); //Date(year, monthIndex, day)
-function ManageStudy() {
+
+function Calendar({ selectedDayCallBack }) {
 	const getYear = (day) => {
 		return format(day, "yyyy");
 	};
@@ -13,8 +15,10 @@ function ManageStudy() {
 	const [currentDay, setCurrentDay] = useState(TODAY);
 	const [year, setYear] = useState(getYear(currentDay));
 	const [month, setMonth] = useState(getMonth(currentDay));
+	const [dayClicked, setDayClicked] = useState(false);
+	const [selectedDay, setSelectedDay] = useState(TODAY);
 
-	const headerCallback = ({ left, right }) => {
+	const headerCallBack = ({ left, right }) => {
 		if (left && !right) {
 			setCurrentDay((current) => sub(current, { months: 1 }));
 		} else if (!left && right) {
@@ -22,6 +26,10 @@ function ManageStudy() {
 		} else {
 			console.error("calendar header button is not working well");
 		}
+	};
+
+	const selectedDayCallBackDelivery = ({ selectedDay, dayClicked }) => {
+		selectedDayCallBack({ selectedDay: selectedDay, dayClicked: dayClicked });
 	};
 
 	useEffect(() => {
@@ -34,10 +42,13 @@ function ManageStudy() {
 			<CalendarHeader
 				year={year}
 				month={month}
-				CallBackEvent={headerCallback}
+				CallBackEvent={headerCallBack}
 			></CalendarHeader>
-			<CalendarBody currentDay={currentDay}></CalendarBody>
+			<CalendarBody
+				currentDay={currentDay}
+				CallBackEvent={selectedDayCallBackDelivery}
+			></CalendarBody>
 		</div>
 	);
 }
-export default ManageStudy;
+export default Calendar;

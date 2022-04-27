@@ -1,8 +1,15 @@
 import styled from "styled-components";
-import "../styles/Colors.module.css";
+import PropTypes from "prop-types";
+import "../../styles/Colors.module.css";
+import SimplePersonTag from "../persontag/SimplePersonTag";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
-function CalendarDay({ currentDay, isClicked, isToday, isCurMonth }) {
+function CalendarDay({
+	currentDay,
+	isClicked,
+	isToday,
+	isCurMonth,
+	peopleName,
+}) {
 	const day = format(currentDay, "d");
 	return (
 		<StyledCalendarDayBox
@@ -12,10 +19,22 @@ function CalendarDay({ currentDay, isClicked, isToday, isCurMonth }) {
 			value={currentDay}
 		>
 			<StyledCalendarDate>{day}</StyledCalendarDate>
-			<StyledCarlendarDayTagBox></StyledCarlendarDayTagBox>
+			<StyledCarlendarDayTagBox>
+				{peopleName !== undefined &&
+					peopleName.map((personName) => {
+						<SimplePersonTag name={personName}></SimplePersonTag>;
+					})}
+			</StyledCarlendarDayTagBox>
 		</StyledCalendarDayBox>
 	);
 }
+CalendarDay.propTypes = {
+	currentDay: PropTypes.instanceOf(Date).isRequired,
+	isClicked: PropTypes.bool.isRequired,
+	isToday: PropTypes.bool.isRequired,
+	isCurMonth: PropTypes.bool.isRequired,
+	peopleName: PropTypes.arrayOf(PropTypes.string),
+};
 const StyledCalendarDayBox = styled.div`
 	height: 100px;
 	width: 100px;
