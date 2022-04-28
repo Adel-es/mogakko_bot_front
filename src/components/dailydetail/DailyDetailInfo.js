@@ -1,14 +1,20 @@
-import { useState } from "react";
-import { format } from "date-fns";
-import styled from "styled-components";
+import PropTypes from "prop-types";
 import DailyDetailHeader from "./DailyDetailHeader";
 import DailyDetailInfoBody from "./DailyDetailInfoBody";
-function DailyDetailInfo({ selectedDay }) {
+function DailyDetailInfo({ selectedDay, peopleInfoOfSelectedDay }) {
+	console.log("selectedDay: ");
+	console.log(selectedDay);
 	return (
 		<div>
 			<DailyDetailHeader selectedDay={selectedDay}></DailyDetailHeader>
-			<DailyDetailInfoBody></DailyDetailInfoBody>
+			<DailyDetailInfoBody
+				peopleInfoOfSelectedDay={peopleInfoOfSelectedDay}
+			></DailyDetailInfoBody>
 		</div>
 	);
 }
+DailyDetailInfo.propTypes = {
+	selectedDay: PropTypes.instanceOf(Date).isRequired,
+	peopleInfoOfSelectedDay: PropTypes.array,
+};
 export default DailyDetailInfo;

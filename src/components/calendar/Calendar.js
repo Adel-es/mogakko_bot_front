@@ -1,11 +1,12 @@
 import CalendarHeader from "./CalendarHeader";
 import CalendarBody from "./CalendarBody";
 import { useState, useEffect } from "react";
-import { startOfYear, startOfMonth, format, sub, add } from "date-fns";
+import { format, sub, add } from "date-fns";
+import PropTypes from "prop-types";
 
 const TODAY = new Date(); //Date(year, monthIndex, day)
 
-function Calendar({ selectedDayCallBack }) {
+function Calendar({ peopleInfo, selectedDayCallBack }) {
 	const getYear = (day) => {
 		return format(day, "yyyy");
 	};
@@ -15,8 +16,6 @@ function Calendar({ selectedDayCallBack }) {
 	const [currentDay, setCurrentDay] = useState(TODAY);
 	const [year, setYear] = useState(getYear(currentDay));
 	const [month, setMonth] = useState(getMonth(currentDay));
-	const [dayClicked, setDayClicked] = useState(false);
-	const [selectedDay, setSelectedDay] = useState(TODAY);
 
 	const headerCallBack = ({ left, right }) => {
 		if (left && !right) {
@@ -28,8 +27,16 @@ function Calendar({ selectedDayCallBack }) {
 		}
 	};
 
-	const selectedDayCallBackDelivery = ({ selectedDay, dayClicked }) => {
-		selectedDayCallBack({ selectedDay: selectedDay, dayClicked: dayClicked });
+	const selectedDayCallBackDelivery = ({
+		selectedDay,
+		dayClicked,
+		peopleInfoOfSelectedDay,
+	}) => {
+		selectedDayCallBack({
+			selectedDay: selectedDay,
+			dayClicked: dayClicked,
+			peopleInfoOfSelectedDay: peopleInfoOfSelectedDay,
+		});
 	};
 
 	useEffect(() => {
@@ -46,9 +53,14 @@ function Calendar({ selectedDayCallBack }) {
 			></CalendarHeader>
 			<CalendarBody
 				currentDay={currentDay}
-				CallBackEvent={selectedDayCallBackDelivery}
+				peopleInfo={peopleInfo}
+				selectedDayCallBack={selectedDayCallBackDelivery}
 			></CalendarBody>
 		</div>
 	);
 }
+Calendar.propTypes = {
+	peopleInfo: PropTypes.array,
+	selectedDayCallBack: PropTypes.func.isRequired,
+};
 export default Calendar;

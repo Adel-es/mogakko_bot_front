@@ -8,7 +8,7 @@ function CalendarDay({
 	isClicked,
 	isToday,
 	isCurMonth,
-	peopleName,
+	peopleInfo,
 }) {
 	const day = format(currentDay, "d");
 	return (
@@ -20,10 +20,12 @@ function CalendarDay({
 		>
 			<StyledCalendarDate>{day}</StyledCalendarDate>
 			<StyledCarlendarDayTagBox>
-				{peopleName !== undefined &&
-					peopleName.map((personName) => {
-						<SimplePersonTag name={personName}></SimplePersonTag>;
-					})}
+				{peopleInfo !== undefined &&
+					peopleInfo !== null &&
+					peopleInfo.map((person) => (
+						// console.log(person.name)
+						<SimplePersonTag name={person.name}></SimplePersonTag>
+					))}
 			</StyledCarlendarDayTagBox>
 		</StyledCalendarDayBox>
 	);
@@ -33,7 +35,7 @@ CalendarDay.propTypes = {
 	isClicked: PropTypes.bool.isRequired,
 	isToday: PropTypes.bool.isRequired,
 	isCurMonth: PropTypes.bool.isRequired,
-	peopleName: PropTypes.arrayOf(PropTypes.string),
+	peopleInfo: PropTypes.array,
 };
 const StyledCalendarDayBox = styled.div`
 	height: 100px;
@@ -65,6 +67,9 @@ const StyledCarlendarDayTagBox = styled.div`
 	height: 80px;
 	width: 100px;
 	overflow-wrap: break-word;
-	overflow-y: auto;
+	// overflow-y: auto;
+
+	display: inline-block;
+	text-align: center;
 `;
 export default CalendarDay;
