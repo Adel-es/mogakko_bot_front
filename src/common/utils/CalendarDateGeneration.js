@@ -1,12 +1,4 @@
-import {
-	format,
-	isSameDay,
-	isSameMonth,
-	startOfWeek,
-	endOfMonth,
-	addDays,
-	compareAsc,
-} from "date-fns";
+import { format, isSameDay, isSameMonth, startOfWeek, addDays } from "date-fns";
 
 const DATE_WEEK_LENGTH = 7;
 const TODAY = new Date();
@@ -19,7 +11,7 @@ const GenerateOneWeek = (weekStart, monthStart) => {
 			currentDay: currentDay,
 			formattedDate: format(currentDay, "d"),
 			isToday: isSameDay(currentDay, TODAY),
-			isCurrMonth: isSameMonth(currentDay, monthStart),
+			isCurMonth: isSameMonth(currentDay, monthStart),
 		});
 		currentDay = addDays(currentDay, 1);
 	}
@@ -28,10 +20,10 @@ const GenerateOneWeek = (weekStart, monthStart) => {
 
 const GenerateOneMonth = (monthStart) => {
 	const daysOfMonth = [];
-	const monthEnd = endOfMonth(monthStart);
 	let currentDay = monthStart;
-	while (compareAsc(currentDay, monthEnd) < 0) {
-		daysOfMonth.push(GenerateOneWeek(startOfWeek(currentDay), monthStart));
+	while (isSameMonth(currentDay, monthStart)) {
+		currentDay = startOfWeek(currentDay);
+		daysOfMonth.push(GenerateOneWeek(currentDay, monthStart));
 		currentDay = addDays(currentDay, DATE_WEEK_LENGTH);
 	}
 	return daysOfMonth;
