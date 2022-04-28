@@ -8,7 +8,7 @@ import {
 } from "date-fns";
 import CalendarDay from "./CalendarDay";
 import CalendarDaysOfWeek from "./CalendarDaysOfWeek";
-import { GenerateOneMonth } from "../../common/utils/CalendarDateGeneration";
+import { GenerateOneMonth } from "../../utils/calendar/CalendarDateGeneration";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
