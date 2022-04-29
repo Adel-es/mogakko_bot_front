@@ -1,18 +1,8 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
 
 function PlanCreateButton({ clickedCallBack }) {
-	const [clicked, setClicked] = useState(false);
-	const onClickButton = () => {
-		setClicked((current) => !current);
-	};
-
-	useEffect(() => {
-		clickedCallBack(clicked);
-	}, [clickedCallBack, clicked]);
-
-	return <CreationButton onClick={onClickButton}>+</CreationButton>;
+	return <CreationButton onClick={clickedCallBack}>+</CreationButton>;
 }
 
 PlanCreateButton.propTypes = {

@@ -27,18 +27,6 @@ function Calendar({ peopleInfo, selectedDayCallBack }) {
 		}
 	};
 
-	const selectedDayCallBackDelivery = ({
-		selectedDay,
-		dayClicked,
-		peopleInfoOfSelectedDay,
-	}) => {
-		selectedDayCallBack({
-			selectedDay: selectedDay,
-			dayClicked: dayClicked,
-			peopleInfoOfSelectedDay: peopleInfoOfSelectedDay,
-		});
-	};
-
 	useEffect(() => {
 		setYear(getYear(currentDay));
 		setMonth(getMonth(currentDay));
@@ -54,7 +42,7 @@ function Calendar({ peopleInfo, selectedDayCallBack }) {
 			<CalendarBody
 				currentDay={currentDay}
 				peopleInfo={peopleInfo}
-				selectedDayCallBack={selectedDayCallBackDelivery}
+				selectedDayCallBack={selectedDayCallBack}
 			></CalendarBody>
 		</div>
 	);

@@ -1,5 +1,4 @@
 import {
-	format,
 	getDay,
 	getWeekOfMonth,
 	startOfMonth,
@@ -11,8 +10,6 @@ import CalendarDaysOfWeek from "./CalendarDaysOfWeek";
 import { GenerateOneMonth } from "../../utils/calendar/CalendarDateGeneration";
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-
-const TODAY = new Date();
 
 function mergePeopleInfoAndCalendar(currentDay, daysOfMonth, peopleInfo) {
 	peopleInfo.sort(function (p1, p2) {
@@ -28,7 +25,6 @@ function mergePeopleInfoAndCalendar(currentDay, daysOfMonth, peopleInfo) {
 			daysOfMonth[weekIndex][dayIndex]["peopleInfo"] = [person];
 		}
 	}
-	// console.log(daysOfMonth);
 	return daysOfMonth;
 }
 
@@ -66,7 +62,7 @@ function CalendarBody({ currentDay, peopleInfo, selectedDayCallBack }) {
 			selectedDay: selectedDay,
 			dayClicked: clickedDay,
 			peopleInfoOfSelectedDay: getPeopleInfoOfSelectedDay(
-				selectedDay,
+				selectedDay, // day
 				daysInfoOfMonth
 			),
 		});

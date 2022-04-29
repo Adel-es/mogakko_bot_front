@@ -1,7 +1,6 @@
 import Calendar from "../components/calendar/Calendar";
 import DailyDetailInfo from "../components/dailydetail/DailyDetailInfo";
-import { useState, useEffect } from "react";
-import { format } from "date-fns";
+import { useState } from "react";
 const TODAY = new Date(); //Date(year, monthIndex, day)
 
 function StudyManager() {
