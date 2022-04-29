@@ -22,9 +22,9 @@ function CalendarDay({
 			<StyledCarlendarDayTagBox>
 				{peopleInfo !== undefined &&
 					peopleInfo !== null &&
-					peopleInfo.map((person) => (
-						// console.log(person.name)
-						<SimplePersonTag name={person.name}></SimplePersonTag>
+					peopleInfo.map((person, index) => (
+						// TODO: key -> id in DB
+						<SimplePersonTag key={index} name={person.name}></SimplePersonTag>
 					))}
 			</StyledCarlendarDayTagBox>
 		</StyledCalendarDayBox>
