@@ -2,8 +2,6 @@ import PropTypes from "prop-types";
 import DailyDetailHeader from "./DailyDetailHeader";
 import DailyDetailInfoBody from "./DailyDetailInfoBody";
 function DailyDetailInfo({ selectedDay, peopleInfoOfSelectedDay }) {
-	console.log("selectedDay: ");
-	console.log(selectedDay);
 	return (
 		<div>
 			<DailyDetailHeader selectedDay={selectedDay}></DailyDetailHeader>
