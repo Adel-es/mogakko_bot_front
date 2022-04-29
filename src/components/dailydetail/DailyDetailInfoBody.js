@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import { useState } from "react";
 import PlanCreateButton from "../plan/PlanCreateButton";
 import DetailPersonTag from "../persontag/DetailPersonTag";
+import PlanWritingBox from "../plan/PlanWritingBox";
+
 function DailyDetailInfoBody({ peopleInfoOfSelectedDay }) {
 	const [clickedCreateButton, setClickedCreateButton] = useState(false);
 	const clickedCreateButtonCallBack = (clicked) => {
@@ -23,11 +25,7 @@ function DailyDetailInfoBody({ peopleInfoOfSelectedDay }) {
 					endTime={getTimeString(personInfo.endTime)}
 				></DetailPersonTag>
 			))}
-			<DetailPersonTag
-				name="테스트이름222222222222222222222222ㅁㄴ어라ㅣㅘ노히ㅏㅗㅓㅏㅚㅓㅏ"
-				startTime="11:00"
-				endTime="12:00"
-			></DetailPersonTag>
+			{clickedCreateButton ? <PlanWritingBox></PlanWritingBox> : ""}
 			<PlanCreateButton
 				clickedCallBack={clickedCreateButtonCallBack}
 			></PlanCreateButton>
