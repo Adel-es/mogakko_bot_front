@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 function DetailPersonTag({ name, startTime, endTime }) {
 	return (
 		<Tag>
@@ -16,6 +17,13 @@ function DetailPersonTag({ name, startTime, endTime }) {
 		</Tag>
 	);
 }
+
+DetailPersonTag.propTypes = {
+	name: PropTypes.string.isRequired,
+	startTime: PropTypes.string.isRequired,
+	endTime: PropTypes.string.isRequired,
+};
+
 const tagFontSize = `12px`;
 const Tag = styled.div`
 	width: 70%;
@@ -32,7 +40,8 @@ const Tag = styled.div`
 	margin-top: 20px;
 	margin-bottom: 20px;
 
-	display: flex; // Tag Content align center
+	// Tag Content align center
+	display: flex;
 	align-items: stretch;
 `;
 const TagName = styled.div`
