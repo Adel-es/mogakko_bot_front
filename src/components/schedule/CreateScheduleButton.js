@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-function PlanCreateButton({ clickedCallBack }) {
+function CreateScheduleButton({ clickedCallBack }) {
 	return <CreationButton onClick={clickedCallBack}>+</CreationButton>;
 }
 
-PlanCreateButton.propTypes = {
+CreateScheduleButton.propTypes = {
 	clickedCallBack: PropTypes.func.isRequired,
 };
 
@@ -31,4 +31,4 @@ const CreationButton = styled.div`
 	// this component align from parent
 	margin: auto;
 `;
-export default PlanCreateButton;
+export default CreateScheduleButton;

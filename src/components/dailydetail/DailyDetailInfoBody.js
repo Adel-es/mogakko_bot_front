@@ -2,19 +2,24 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
 import { useState } from "react";
-import PlanCreateButton from "../plan/PlanCreateButton";
+import CreateScheduleButton from "../schedule/CreateScheduleButton";
+import CreateScheduleBox from "../schedule/CreateScheduleBox";
 import DetailPersonTag from "../persontag/DetailPersonTag";
-import PlanWritingBox from "../plan/PlanWritingBox";
 
-function DailyDetailInfoBody({ peopleInfoOfSelectedDay }) {
+function getTimeString(date) {
+	const timeString = format(date, "HH") + ":" + format(date, "mm");
+	return timeString;
+}
+
+function DailyDetailInfoBody({
+	peopleInfoOfSelectedDay,
+	createNewScheduleCallBack,
+}) {
 	const [clickedCreateButton, setClickedCreateButton] = useState(false);
 	const clickedCreateButtonCallBack = (clicked) => {
 		setClickedCreateButton(clicked);
 	};
-	function getTimeString(date) {
-		const timeString = format(date, "HH") + ":" + format(date, "mm");
-		return timeString;
-	}
+
 	return (
 		<PersonTagAlignCenter>
 			{peopleInfoOfSelectedDay.map((personInfo, index) => (
@@ -25,15 +30,22 @@ function DailyDetailInfoBody({ peopleInfoOfSelectedDay }) {
 					endTime={getTimeString(personInfo.endTime)}
 				></DetailPersonTag>
 			))}
-			{clickedCreateButton ? <PlanWritingBox></PlanWritingBox> : ""}
-			<PlanCreateButton
+			{clickedCreateButton ? (
+				<CreateScheduleBox
+					createNewScheduleCallBack={createNewScheduleCallBack}
+				></CreateScheduleBox>
+			) : (
+				""
+			)}
+			<CreateScheduleButton
 				clickedCallBack={clickedCreateButtonCallBack}
-			></PlanCreateButton>
+			></CreateScheduleButton>
 		</PersonTagAlignCenter>
 	);
 }
 DailyDetailInfoBody.propTypes = {
 	peopleInfoOfSelectedDay: PropTypes.array,
+	createNewScheduleCallBack: PropTypes.func.isRequired,
 };
 const PersonTagAlignCenter = styled.div`
 	width: 100%;

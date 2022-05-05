@@ -1,9 +1,13 @@
 import styled from "styled-components";
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { format } from "date-fns";
 import TimeInputBox from "./TimeInputBox";
 
-function PlanWritingBox() {
+function convertInputStringToDate(date, time) {
+	return new Date();
+}
+function CreateScheduleBox({ createNewScheduleCallBack }) {
 	const TODAY = new Date();
 	const [startTime, setStartTime] = useState(format(TODAY, "HH:mm"));
 	const [startDate, setStartDate] = useState(format(TODAY, "yyyy-MM-dd"));
@@ -14,6 +18,7 @@ function PlanWritingBox() {
 		console.log(startTime);
 		console.log(endDate);
 		console.log(endTime);
+		// createNewScheduleCallBack({name:"test", startTime: new Date(startDate.),endTime:})
 		// TODO: parent의 callback 함수로 start, end 보내기
 	};
 	const startTimeCallBack = (_startDate, _startTime) => {
@@ -38,6 +43,9 @@ function PlanWritingBox() {
 		</Box>
 	);
 }
+CreateScheduleBox.propTypes = {
+	createNewScheduleCallBack: PropTypes.func.isRequired,
+};
 const Box = styled.div.attrs({ className: "timebox" })`
 	width: 60%;
 	height: 60%;
@@ -59,4 +67,4 @@ const SubmitButton = styled.button`
 	width: 100px;
 	height: 20px;
 `;
-export default PlanWritingBox;
+export default CreateScheduleBox;
