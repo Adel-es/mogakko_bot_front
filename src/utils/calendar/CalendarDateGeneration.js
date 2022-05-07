@@ -1,4 +1,11 @@
-import { format, isSameDay, isSameMonth, startOfWeek, addDays } from "date-fns";
+import {
+	format,
+	isSameDay,
+	isSameMonth,
+	startOfWeek,
+	startOfMonth,
+	addDays,
+} from "date-fns";
 
 const DATE_WEEK_LENGTH = 7;
 const TODAY = new Date();
@@ -29,4 +36,8 @@ const GenerateOneMonth = (monthStart) => {
 	return daysOfMonth;
 };
 
-export { GenerateOneWeek, GenerateOneMonth };
+const GenerateCalendarOfCurrentMonth = (currentCalendarDate) => {
+	return GenerateOneMonth(startOfMonth(currentCalendarDate));
+};
+
+export { GenerateOneWeek, GenerateOneMonth, GenerateCalendarOfCurrentMonth };

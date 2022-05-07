@@ -1,17 +1,25 @@
-function CalendarHeader({ year, month, CallBackEvent }) {
+import { format } from "date-fns";
+
+function CalendarHeader({ currentCalendarDate, onMoveCalendarMonth }) {
+	const getYear = (day) => {
+		return format(day, "yyyy");
+	};
+	const getMonth = (day) => {
+		return format(day, "MMMM");
+	};
 	const onClickLeftButton = () => {
-		CallBackEvent({ left: true, right: false });
+		onMoveCalendarMonth({ left: true, right: false });
 		console.log("left button");
 	};
 	const onClickRightButton = () => {
-		CallBackEvent({ left: false, right: true });
+		onMoveCalendarMonth({ left: false, right: true });
 		console.log("right button");
 	};
 	return (
 		<div>
-			<p>{year}</p>
+			<p>{getYear(currentCalendarDate)}</p>
 			<button onClick={onClickLeftButton}>&#60;</button>
-			<div>{month}</div>
+			<div>{getMonth(currentCalendarDate)}</div>
 			<button onClick={onClickRightButton}>&#62;</button>
 		</div>
 	);
