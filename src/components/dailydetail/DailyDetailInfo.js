@@ -10,6 +10,7 @@ function DailyDetailInfo({
 		<div>
 			<DailyDetailHeader selectedDay={selectedDay}></DailyDetailHeader>
 			<DailyDetailInfoBody
+				selectedDay={selectedDay}
 				peopleInfoOfSelectedDay={peopleInfoOfSelectedDay}
 				createNewScheduleCallBack={createNewScheduleCallBack}
 			></DailyDetailInfoBody>
@@ -19,6 +20,6 @@ function DailyDetailInfo({
 DailyDetailInfo.propTypes = {
 	selectedDay: PropTypes.instanceOf(Date).isRequired,
 	peopleInfoOfSelectedDay: PropTypes.array,
-	createNewPlanCallBack: PropTypes.func.isRequired,
+	createNewScheduleCallBack: PropTypes.func.isRequired,
 };
 export default DailyDetailInfo;

@@ -1,25 +1,32 @@
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
-import { useState, forwardRef } from "react";
-import { format } from "date-fns";
+import { useState, useEffect, forwardRef } from "react";
 import { ko } from "date-fns/esm/locale";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-function TimeInputBox({ timeText, TimeCallBack }) {
-	const TODAY = new Date();
-	const [time, setTime] = useState(format(TODAY, "HH:mm"));
-	// const [date, setDate] = useState(format(TODAY, "yyyy-MM-dd"));
-	const [date, setDate] = useState(new Date());
+//TODO: ScheduleInputBox로 이름 변경하기
+function TimeInputBox({ timeText, schedMinDate, TimeCallBack }) {
+	const [time, setTime] = useState("12:00");
+	const [date, setDate] = useState(schedMinDate);
+	const [minDate, setMinDate] = useState(schedMinDate);
+
+	useEffect(() => {
+		setMinDate(schedMinDate);
+	}, [schedMinDate]);
+
 	const onChangeTime = (event) => {
+		// TODO: date picker의 clock으로 바꾸기
 		setTime(event.target.value);
-		console.log(event.target);
-		TimeCallBack(date, event.target.value);
+		const [hour, minute] = event.target.value.split(":", 2);
+		date.setHours(Number(hour), Number(minute));
+		TimeCallBack(date);
 	};
-	const onChangeDate = (date) => {
-		setDate(date);
-		console.log(date);
-		TimeCallBack(format(date, "yyyy-MM-dd"), time);
+	const onChangeDate = (_date) => {
+		setDate(_date);
+		const [hour, minute] = time.split(":", 2);
+		_date.setHours(Number(hour), Number(minute));
+		TimeCallBack(_date);
 	};
 	const CustomDateInput = forwardRef(({ value, onClick, onChange }, ref) => (
 		<DateInput
@@ -38,7 +45,7 @@ function TimeInputBox({ timeText, TimeCallBack }) {
 					locale={ko}
 					onChange={(date) => onChangeDate(date)}
 					dateFormat="yyyy-MM-dd (eee)"
-					minDate={new Date()}
+					minDate={minDate}
 					customInput={<CustomDateInput />}
 				></DatePicker>
 			</DateWrapper>
@@ -51,6 +58,7 @@ function TimeInputBox({ timeText, TimeCallBack }) {
 
 TimeInputBox.propTypes = {
 	timeText: PropTypes.string.isRequired,
+	schedMinDate: PropTypes.instanceOf(Date).isRequired,
 	TimeCallBack: PropTypes.func.isRequired,
 };
 

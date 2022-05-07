@@ -12,6 +12,7 @@ function getTimeString(date) {
 }
 
 function DailyDetailInfoBody({
+	selectedDay,
 	peopleInfoOfSelectedDay,
 	createNewScheduleCallBack,
 }) {
@@ -32,6 +33,7 @@ function DailyDetailInfoBody({
 			))}
 			{clickedCreateButton ? (
 				<CreateScheduleBox
+					selectedDay={selectedDay}
 					createNewScheduleCallBack={createNewScheduleCallBack}
 				></CreateScheduleBox>
 			) : (
@@ -44,6 +46,7 @@ function DailyDetailInfoBody({
 	);
 }
 DailyDetailInfoBody.propTypes = {
+	selectedDay: PropTypes.instanceOf(Date).isRequired,
 	peopleInfoOfSelectedDay: PropTypes.array,
 	createNewScheduleCallBack: PropTypes.func.isRequired,
 };

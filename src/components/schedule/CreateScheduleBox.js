@@ -1,42 +1,38 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { useState } from "react";
-import { format } from "date-fns";
+import { useState, useEffect } from "react";
 import TimeInputBox from "./TimeInputBox";
+import ScheduleInfoStruct from "../../utils/schedule/ScheduleInfoStruct";
 
-function convertInputStringToDate(date, time) {
-	return new Date();
-}
-function CreateScheduleBox({ createNewScheduleCallBack }) {
-	const TODAY = new Date();
-	const [startTime, setStartTime] = useState(format(TODAY, "HH:mm"));
-	const [startDate, setStartDate] = useState(format(TODAY, "yyyy-MM-dd"));
-	const [endTime, setEndTime] = useState(format(TODAY, "HH:mm"));
-	const [endDate, setEndDate] = useState(format(TODAY, "yyyy-MM-dd"));
+function CreateScheduleBox({ selectedDay, createNewScheduleCallBack }) {
+	const [startDate, setStartDate] = useState(selectedDay);
+	const [endDate, setEndDate] = useState(selectedDay);
+	// selecteDay click 했을 땐 					: 시작 시각, 종료시각의 date, minDate가 -> selectedDay로 바뀌어야 함.
+	// TODO: ==> selectedDay를 바꿨을 땐 그냥 createScheduleBox가 없어지도록 하기.
+	// 시작 시각, 종료 시각 각자를 눌렀을 땐 : 각자 date만 반영되어야 함.
+	// 시작 시각을 눌렀을 시 								: 종료시각의  minDate == 시작 시각
+	//
 	const onClickSubmit = () => {
 		console.log(startDate);
-		console.log(startTime);
 		console.log(endDate);
-		console.log(endTime);
-		// createNewScheduleCallBack({name:"test", startTime: new Date(startDate.),endTime:})
-		// TODO: parent의 callback 함수로 start, end 보내기
+		createNewScheduleCallBack(ScheduleInfoStruct("test", startDate, endDate));
 	};
-	const startTimeCallBack = (_startDate, _startTime) => {
+	const startTimeCallBack = (_startDate) => {
 		setStartDate(_startDate);
-		setStartTime(_startTime);
 	};
-	const endTimeCallBack = (_endDate, _endTime) => {
+	const endTimeCallBack = (_endDate) => {
 		setEndDate(_endDate);
-		setEndTime(_endTime);
 	};
 	return (
 		<Box>
 			<TimeInputBox
 				timeText={"시작 시각"}
+				schedMinDate={new Date()}
 				TimeCallBack={startTimeCallBack}
 			></TimeInputBox>
 			<TimeInputBox
-				timeText={"종료 시각"}
+				timeText={"종료 시각"} // TODO: minDate가 시작 시각 이후로 잡히게 하기
+				schedMinDate={startDate}
 				TimeCallBack={endTimeCallBack}
 			></TimeInputBox>
 			<SubmitButton onClick={onClickSubmit}>OK</SubmitButton>
