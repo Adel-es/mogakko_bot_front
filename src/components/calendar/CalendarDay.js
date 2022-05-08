@@ -7,22 +7,22 @@ function CalendarDay({
 	currentDay,
 	isClicked,
 	isToday,
-	isCurMonth,
-	peopleInfo,
+	isCurrentMonth,
+	schedulesOfCurrentDay,
 }) {
 	const day = format(currentDay, "d");
 	return (
 		<StyledCalendarDayBox
 			isClicked={isClicked}
 			isToday={isToday}
-			isCurMonth={isCurMonth}
+			isCurrentMonth={isCurrentMonth}
 			value={currentDay}
 		>
 			<StyledCalendarDate>{day}</StyledCalendarDate>
 			<StyledCarlendarDayTagBox>
-				{peopleInfo !== undefined &&
-					peopleInfo !== null &&
-					peopleInfo.map((person, index) => (
+				{schedulesOfCurrentDay !== undefined &&
+					schedulesOfCurrentDay !== null &&
+					schedulesOfCurrentDay.map((person, index) => (
 						// TODO: key -> id in DB
 						<SimplePersonTag key={index} name={person.name}></SimplePersonTag>
 					))}
@@ -34,14 +34,14 @@ CalendarDay.propTypes = {
 	currentDay: PropTypes.instanceOf(Date).isRequired,
 	isClicked: PropTypes.bool.isRequired,
 	isToday: PropTypes.bool.isRequired,
-	isCurMonth: PropTypes.bool.isRequired,
-	peopleInfo: PropTypes.array,
+	isCurrentMonth: PropTypes.bool.isRequired,
+	schedulesOfCurrentDay: PropTypes.array,
 };
 const StyledCalendarDayBox = styled.div`
 	height: 100px;
 	width: 100px;
 	${(props) =>
-		!props.isCurMonth ? borderDayBoxCurMonth : borderDayBoxDefault};
+		!props.isCurrentMonth ? borderDayBoxCurMonth : borderDayBoxDefault};
 	${(props) =>
 		props.isClicked
 			? borderDayBoxClicked

@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-function CreateScheduleButton({ clickedCallBack }) {
-	return <CreationButton onClick={clickedCallBack}>+</CreationButton>;
+function CreateScheduleButton({ onClickCreateScheduleButton }) {
+	return (
+		<CreationButton onClick={onClickCreateScheduleButton}>+</CreationButton>
+	);
 }
 
 CreateScheduleButton.propTypes = {
-	clickedCallBack: PropTypes.func.isRequired,
+	onClickCreateScheduleButton: PropTypes.func.isRequired,
 };
 
 const CreationButton = styled.div`

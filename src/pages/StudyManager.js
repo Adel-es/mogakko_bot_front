@@ -77,17 +77,17 @@ function StudyManager() {
 
 	const [dayClicked, setDayClicked] = useState(false);
 	const [selectedDay, setSelectedDay] = useState(new Date());
-	const [peopleInfoOfSelectedDay, setPeopleInfoOfSelectedDay] = useState([]);
+	const [schedulesOfSelectedDay, setSchedulesOfSelectedDay] = useState([]);
 	// FIXME: test용 samplePeopleInfo를 넣기 위한 거, => API 연결 시, [] 빈 array로 초기화함.
-	const [peopleInfoOfAllDay, setPeopleInfoOfAllDay] =
+	const [schedulesOfCurrentMonth, setSchedulesOfCurrentMonth] =
 		useState(samplePeopleInfo);
 	// FIXME: mergePeople~~ 함수는 임시 test용 함수 (calendar와 schedule 정보를 array로 병합시킴.)
 	//	calendarOfCurrentMonth 에는 각 day에 schedule의 id를 Set()으로 저장,
 	//	schedulesOfCurrentMonth 에는 schedule을 Map(id, {schedule 정보})에 저장.
-	const schedulesOfCurrentMonth = mergePeopleInfoAndCalendar(
+	const calendarOfCurrentMonth = mergePeopleInfoAndCalendar(
 		currentCalendarDate,
 		GenerateCalendarOfCurrentMonth(new Date()),
-		peopleInfoOfAllDay
+		schedulesOfCurrentMonth
 	);
 
 	const handleSelectDayForDetail = ({
@@ -97,17 +97,17 @@ function StudyManager() {
 	}) => {
 		setSelectedDay(_selectedDay);
 		setDayClicked(_dayClicked);
-		setPeopleInfoOfSelectedDay(
+		setSchedulesOfSelectedDay(
 			getPeopleInfoOfSelectedDay(
 				_selectedDay, // day
-				schedulesOfCurrentMonth
+				calendarOfCurrentMonth
 			)
 		);
 	};
 
-	const handleCreateNewSchedule = (personInfo) => {
-		setPeopleInfoOfAllDay(peopleInfoOfAllDay.concat([personInfo]));
-		console.log(peopleInfoOfAllDay);
+	const handleCreateSchedule = (personInfo) => {
+		setSchedulesOfCurrentMonth(schedulesOfCurrentMonth.concat([personInfo]));
+		console.log(schedulesOfCurrentMonth);
 	};
 
 	// TODO: samplePeopleInfo가 Calendar에 바로 반영이 되지 않고 있음
@@ -116,16 +116,16 @@ function StudyManager() {
 		<div>
 			<Calendar
 				currentCalendarDate={currentCalendarDate}
-				peopleInfo={peopleInfoOfAllDay}
 				schedulesOfCurrentMonth={schedulesOfCurrentMonth}
+				calendarOfCurrentMonth={calendarOfCurrentMonth}
 				onMoveCalendarMonth={handleMoveCalendarMonth}
 				onSelectDayForDetail={handleSelectDayForDetail}
 			></Calendar>
 			{dayClicked ? (
 				<DailyDetailInfo
 					selectedDay={selectedDay}
-					peopleInfoOfSelectedDay={peopleInfoOfSelectedDay}
-					createNewScheduleCallBack={handleCreateNewSchedule}
+					schedulesOfSelectedDay={schedulesOfSelectedDay}
+					onCreateSchedule={handleCreateSchedule}
 				></DailyDetailInfo>
 			) : (
 				""

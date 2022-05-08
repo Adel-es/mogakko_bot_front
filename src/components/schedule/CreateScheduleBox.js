@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import TimeInputBox from "./TimeInputBox";
 import ScheduleInfoStruct from "../../utils/schedule/ScheduleInfoStruct";
 
-function CreateScheduleBox({ selectedDay, createNewScheduleCallBack }) {
+function CreateScheduleBox({ selectedDay, onCreateSchedule }) {
 	const [startDate, setStartDate] = useState(selectedDay);
 	const [endDate, setEndDate] = useState(selectedDay);
 	// selecteDay click 했을 땐 					: 시작 시각, 종료시각의 date, minDate가 -> selectedDay로 바뀌어야 함.
@@ -12,35 +12,35 @@ function CreateScheduleBox({ selectedDay, createNewScheduleCallBack }) {
 	// 시작 시각, 종료 시각 각자를 눌렀을 땐 : 각자 date만 반영되어야 함.
 	// 시작 시각을 눌렀을 시 								: 종료시각의  minDate == 시작 시각
 	//
-	const onClickSubmit = () => {
+	const handleClickSubmit = () => {
 		console.log(startDate);
 		console.log(endDate);
-		createNewScheduleCallBack(ScheduleInfoStruct("test", startDate, endDate));
+		onCreateSchedule(ScheduleInfoStruct("test", startDate, endDate));
 	};
-	const startTimeCallBack = (_startDate) => {
+	const handleSelectStartDate = (_startDate) => {
 		setStartDate(_startDate);
 	};
-	const endTimeCallBack = (_endDate) => {
+	const handleSelectEndDate = (_endDate) => {
 		setEndDate(_endDate);
 	};
 	return (
 		<Box>
 			<TimeInputBox
 				timeText={"시작 시각"}
-				schedMinDate={new Date()}
-				TimeCallBack={startTimeCallBack}
+				minDateOfDatePicker={new Date()}
+				onSelectDate={handleSelectStartDate}
 			></TimeInputBox>
 			<TimeInputBox
 				timeText={"종료 시각"} // TODO: minDate가 시작 시각 이후로 잡히게 하기
-				schedMinDate={startDate}
-				TimeCallBack={endTimeCallBack}
+				minDateOfDatePicker={startDate}
+				onSelectDate={handleSelectEndDate}
 			></TimeInputBox>
-			<SubmitButton onClick={onClickSubmit}>OK</SubmitButton>
+			<SubmitButton onClick={handleClickSubmit}>OK</SubmitButton>
 		</Box>
 	);
 }
 CreateScheduleBox.propTypes = {
-	createNewScheduleCallBack: PropTypes.func.isRequired,
+	onCreateSchedule: PropTypes.func.isRequired,
 };
 const Box = styled.div.attrs({ className: "timebox" })`
 	width: 60%;

@@ -6,14 +6,14 @@ import PropTypes from "prop-types";
 
 function CalendarBody({
 	currentDay,
-	peopleInfo,
 	schedulesOfCurrentMonth,
+	calendarOfCurrentMonth,
 	onSelectDayForDetail,
 }) {
 	const [clickedDay, setClickedDay] = useState(false);
 	const [selectedDay, setSelectedDay] = useState(currentDay);
 
-	const onClickCalendarDay = (day) => {
+	const handleClickCalendarDay = (day) => {
 		if (compareAsc(day, selectedDay) === 0) {
 			setClickedDay((current) => !current);
 		} else {
@@ -36,12 +36,12 @@ function CalendarBody({
 				<CalendarDaysOfWeek></CalendarDaysOfWeek>
 			</thead>
 			<tbody>
-				{schedulesOfCurrentMonth.map((week) => (
+				{calendarOfCurrentMonth.map((week) => (
 					<tr key={week.at(0).currentDay}>
 						{week.map((day) => (
 							<td
 								key={day.currentDay}
-								onClick={() => onClickCalendarDay(day.currentDay)}
+								onClick={() => handleClickCalendarDay(day.currentDay)}
 							>
 								<CalendarDay
 									currentDay={day.currentDay}
@@ -51,8 +51,10 @@ function CalendarBody({
 											: false
 									}
 									isToday={day.isToday}
-									isCurMonth={day.isCurMonth}
-									peopleInfo={"peopleInfo" in day ? day.peopleInfo : null}
+									isCurrentMonth={day.isCurMonth}
+									schedulesOfCurrentDay={
+										"peopleInfo" in day ? day.peopleInfo : null
+									}
 								></CalendarDay>
 							</td>
 						))}
@@ -64,7 +66,7 @@ function CalendarBody({
 }
 CalendarBody.propTypes = {
 	currentDay: PropTypes.instanceOf(Date).isRequired,
-	peopleInfo: PropTypes.array,
+	schedulesOfCurrentMonth: PropTypes.array,
 	onSelectDayForDetail: PropTypes.func.isRequired,
 };
 export default CalendarBody;

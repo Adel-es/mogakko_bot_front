@@ -6,8 +6,8 @@ function Calendar({
 	currentCalendarDate,
 	onMoveCalendarMonth,
 	onSelectDayForDetail,
-	peopleInfo,
 	schedulesOfCurrentMonth,
+	calendarOfCurrentMonth,
 }) {
 	return (
 		<div>
@@ -17,15 +17,15 @@ function Calendar({
 			></CalendarHeader>
 			<CalendarBody
 				currentDay={currentCalendarDate}
-				peopleInfo={peopleInfo}
 				schedulesOfCurrentMonth={schedulesOfCurrentMonth}
+				calendarOfCurrentMonth={calendarOfCurrentMonth}
 				onSelectDayForDetail={onSelectDayForDetail}
 			></CalendarBody>
 		</div>
 	);
 }
 Calendar.propTypes = {
-	peopleInfo: PropTypes.array,
+	schedulesOfCurrentMonth: PropTypes.array,
 	onSelectDayForDetail: PropTypes.func.isRequired,
 };
 export default Calendar;

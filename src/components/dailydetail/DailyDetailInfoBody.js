@@ -13,17 +13,17 @@ function getTimeString(date) {
 
 function DailyDetailInfoBody({
 	selectedDay,
-	peopleInfoOfSelectedDay,
-	createNewScheduleCallBack,
+	schedulesOfSelectedDay,
+	onCreateSchedule,
 }) {
 	const [clickedCreateButton, setClickedCreateButton] = useState(false);
-	const clickedCreateButtonCallBack = (clicked) => {
+	const handleClickCreateScheduleButton = (clicked) => {
 		setClickedCreateButton(clicked);
 	};
 
 	return (
 		<PersonTagAlignCenter>
-			{peopleInfoOfSelectedDay.map((personInfo, index) => (
+			{schedulesOfSelectedDay.map((personInfo, index) => (
 				<DetailPersonTag
 					key={index} // TODO: index를 나중에 DB에서 id를 받아와서 바꾸기
 					name={personInfo.name}
@@ -34,21 +34,21 @@ function DailyDetailInfoBody({
 			{clickedCreateButton ? (
 				<CreateScheduleBox
 					selectedDay={selectedDay}
-					createNewScheduleCallBack={createNewScheduleCallBack}
+					onCreateSchedule={onCreateSchedule}
 				></CreateScheduleBox>
 			) : (
 				""
 			)}
 			<CreateScheduleButton
-				clickedCallBack={clickedCreateButtonCallBack}
+				onClickCreateScheduleButton={handleClickCreateScheduleButton}
 			></CreateScheduleButton>
 		</PersonTagAlignCenter>
 	);
 }
 DailyDetailInfoBody.propTypes = {
 	selectedDay: PropTypes.instanceOf(Date).isRequired,
-	peopleInfoOfSelectedDay: PropTypes.array,
-	createNewScheduleCallBack: PropTypes.func.isRequired,
+	schedulesOfSelectedDay: PropTypes.array,
+	onCreateSchedule: PropTypes.func.isRequired,
 };
 const PersonTagAlignCenter = styled.div`
 	width: 100%;

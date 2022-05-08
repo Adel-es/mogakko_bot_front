@@ -3,23 +3,23 @@ import DailyDetailHeader from "./DailyDetailHeader";
 import DailyDetailInfoBody from "./DailyDetailInfoBody";
 function DailyDetailInfo({
 	selectedDay,
-	peopleInfoOfSelectedDay,
-	createNewScheduleCallBack,
+	schedulesOfSelectedDay,
+	onCreateSchedule,
 }) {
 	return (
 		<div>
 			<DailyDetailHeader selectedDay={selectedDay}></DailyDetailHeader>
 			<DailyDetailInfoBody
 				selectedDay={selectedDay}
-				peopleInfoOfSelectedDay={peopleInfoOfSelectedDay}
-				createNewScheduleCallBack={createNewScheduleCallBack}
+				schedulesOfSelectedDay={schedulesOfSelectedDay}
+				onCreateSchedule={onCreateSchedule}
 			></DailyDetailInfoBody>
 		</div>
 	);
 }
 DailyDetailInfo.propTypes = {
 	selectedDay: PropTypes.instanceOf(Date).isRequired,
-	peopleInfoOfSelectedDay: PropTypes.array,
-	createNewScheduleCallBack: PropTypes.func.isRequired,
+	schedulesOfSelectedDay: PropTypes.array,
+	onCreateSchedule: PropTypes.func.isRequired,
 };
 export default DailyDetailInfo;
