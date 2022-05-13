@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import "../../styles/Colors.module.css";
-import SimplePersonTag from "../persontag/SimplePersonTag";
+import SimplePersonTag from "../../../components/persontag/SimplePersonTag";
 import { format } from "date-fns";
 function CalendarDay({
 	currentDay,

@@ -1,4 +1,5 @@
-import Calendar from "../components/calendar/Calendar";
+// import Calendar from "../components/calendar/Calendar";
+import Calendar from "react-calendar";
 import DailyDetailInfo from "../components/dailydetail/DailyDetailInfo";
 import ScheduleInfoStruct from "../utils/schedule/ScheduleInfoStruct";
 import {
@@ -92,6 +93,31 @@ function getPeopleInfoOfSelectedDay(selectedDay, daysInfoOfMonth) {
 	return [];
 }
 
+function getCalendarDayOfSelectedDay(selectedDay, calendarOfCurrentMonth) {
+	const weekIndex = getWeekOfMonth(selectedDay) - 1;
+	const dayIndex = getDay(selectedDay);
+	console.log(weekIndex, dayIndex);
+	return calendarOfCurrentMonth[weekIndex][dayIndex];
+}
+
+function getSchedulesOfSelectedDay(
+	selectedDay,
+	calendarOfCurrentMonth,
+	schedulesOfCurrentMonth
+) {
+	const calendarDayOfSelectedDay = getCalendarDayOfSelectedDay(
+		selectedDay,
+		calendarOfCurrentMonth
+	);
+	if ("schedules" in calendarDayOfSelectedDay === false) return [];
+	const scheduleIdsInSelectedDay = calendarDayOfSelectedDay["schedules"];
+	const schedulesOfSelectedDay = [];
+	for (const id of scheduleIdsInSelectedDay) {
+		scheduleIdsInSelectedDay.push(schedulesOfCurrentMonth.get(id));
+	}
+	return schedulesOfSelectedDay;
+}
+
 function StudyManager() {
 	const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date());
 
@@ -108,6 +134,7 @@ function StudyManager() {
 	const [dayClicked, setDayClicked] = useState(false);
 	const [selectedDay, setSelectedDay] = useState(new Date());
 	const [schedulesOfSelectedDay, setSchedulesOfSelectedDay] = useState([]);
+	// let schedulesOfSelectedDay = [];
 	// FIXME: test용 samplePeopleInfo를 넣기 위한 거, => API 연결 시, [] 빈 array로 초기화함.
 	const [schedulesOfCurrentMonth, setSchedulesOfCurrentMonth] =
 		useState(samplePeopleInfo);
@@ -137,10 +164,24 @@ function StudyManager() {
 	}) => {
 		setSelectedDay(_selectedDay);
 		setDayClicked(_dayClicked);
+		// setSchedulesOfSelectedDay(
+		// 	getSchedulesOfSelectedDay(
+		// 		_selectedDay,
+		// 		calendarOfCurrentMonth,
+		// 		schedulesOfCurrentMonth
+		// 	)
+		// );
 		setSchedulesOfSelectedDay(
 			getPeopleInfoOfSelectedDay(
 				_selectedDay, // day
 				calendarOfCurrentMonth
+			)
+		);
+		console.log(
+			getSchedulesOfSelectedDay(
+				_selectedDay,
+				calendarOfCurrentMonth,
+				schedulesOfCurrentMonth
 			)
 		);
 	};
@@ -154,13 +195,14 @@ function StudyManager() {
 	// TODO: 다른 day를 클릭했을 때, create box가 사라지지 않음. 아예 detail view를 없애고 난 후, 다시 열어보면  create box가 사라져있음.
 	return (
 		<div>
-			<Calendar
+			{/* <Calendar
 				currentCalendarDate={currentCalendarDate}
 				schedulesOfCurrentMonth={test_schedulesOfCurrentMonth}
 				calendarOfCurrentMonth={test_calendarOfCurrentMonth}
 				onMoveCalendarMonth={handleMoveCalendarMonth}
 				onSelectDayForDetail={handleSelectDayForDetail}
-			></Calendar>
+			></Calendar> */}
+			<Calendar></Calendar>
 			{dayClicked ? (
 				<DailyDetailInfo
 					selectedDay={selectedDay}
