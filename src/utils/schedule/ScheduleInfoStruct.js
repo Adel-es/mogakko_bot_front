@@ -1,11 +1,14 @@
 //TODO: class 로 변경하기
 // TODO: typescript 적용하기
 //  name: string, startTime: Date(), endTime: Date()
-function ScheduleInfoStruct(_name, _startTime, _endTime) {
+function ScheduleInfoStruct(id, name, startTime, endTime, title, description) {
 	return {
-		name: _name,
-		startTime: _startTime,
-		endTime: _endTime,
+		id: id,
+		name: name,
+		startTime: startTime,
+		endTime: endTime,
+		title: title,
+		description: description,
 	};
 }
 

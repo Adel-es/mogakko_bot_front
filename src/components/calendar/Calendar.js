@@ -25,7 +25,7 @@ function Calendar({
 	);
 }
 Calendar.propTypes = {
-	schedulesOfCurrentMonth: PropTypes.array,
+	schedulesOfCurrentMonth: PropTypes.instanceOf(Map).isRequired,
 	onSelectDayForDetail: PropTypes.func.isRequired,
 };
 export default Calendar;

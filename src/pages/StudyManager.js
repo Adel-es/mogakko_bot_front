@@ -14,24 +14,36 @@ import { GenerateCalendarOfCurrentMonth } from "../utils/calendar/CalendarDateGe
 
 const samplePeopleInfo = [
 	ScheduleInfoStruct(
+		1,
 		"정채ㅜ언",
 		new Date(2022, 4, 30, 11, 0),
-		new Date(2022, 4, 30, 12, 0)
+		new Date(2022, 4, 30, 12, 0),
+		"test title",
+		"test description"
 	),
 	ScheduleInfoStruct(
+		2,
 		"윤승ㅎ희",
 		new Date(2022, 4, 26, 11, 0),
-		new Date(2022, 4, 27, 12, 0)
+		new Date(2022, 4, 27, 12, 0),
+		"test title2",
+		"test description2"
 	),
 	ScheduleInfoStruct(
+		3,
 		"고선아ㅣ",
 		new Date(2022, 4, 27, 22, 0),
-		new Date(2022, 4, 28, 1, 0)
+		new Date(2022, 4, 28, 1, 0),
+		"test title3",
+		"test descipriont3"
 	),
 	ScheduleInfoStruct(
+		4,
 		"쥰내내내내ㅐ내내ㅐ긴이름TooLooooooooooooooong",
 		new Date(2022, 4, 27, 22, 0),
-		new Date(2022, 4, 28, 12, 0)
+		new Date(2022, 4, 28, 12, 0),
+		"test title4",
+		"test description4"
 	),
 ];
 
@@ -51,6 +63,24 @@ function mergePeopleInfoAndCalendar(currentDay, daysOfMonth, peopleInfo) {
 		}
 	}
 	return daysOfMonth;
+}
+
+function test_mergePeopleInfoAndCalendar(
+	calendarOfCurrentMonth,
+	schedulesOfCurrentMonth
+) {
+	for (let schedule of schedulesOfCurrentMonth) {
+		const weekIndex = getWeekOfMonth(schedule.startTime) - 1;
+		const dayIndex = getDay(schedule.startTime);
+		if ("schedules" in calendarOfCurrentMonth[weekIndex][dayIndex]) {
+			calendarOfCurrentMonth[weekIndex][dayIndex]["schedules"].add(schedule.id);
+		} else {
+			calendarOfCurrentMonth[weekIndex][dayIndex]["schedules"] = new Set().add(
+				schedule.id
+			);
+		}
+	}
+	return calendarOfCurrentMonth;
 }
 
 function getPeopleInfoOfSelectedDay(selectedDay, daysInfoOfMonth) {
@@ -81,12 +111,22 @@ function StudyManager() {
 	// FIXME: test용 samplePeopleInfo를 넣기 위한 거, => API 연결 시, [] 빈 array로 초기화함.
 	const [schedulesOfCurrentMonth, setSchedulesOfCurrentMonth] =
 		useState(samplePeopleInfo);
+
+	const [test_schedulesOfCurrentMonth, setTest_schedulesOfCurrentMonth] =
+		useState(
+			new Map(samplePeopleInfo.map((personInfo) => [personInfo.id, personInfo]))
+		);
+
 	// FIXME: mergePeople~~ 함수는 임시 test용 함수 (calendar와 schedule 정보를 array로 병합시킴.)
 	//	calendarOfCurrentMonth 에는 각 day에 schedule의 id를 Set()으로 저장,
 	//	schedulesOfCurrentMonth 에는 schedule을 Map(id, {schedule 정보})에 저장.
 	const calendarOfCurrentMonth = mergePeopleInfoAndCalendar(
 		currentCalendarDate,
-		GenerateCalendarOfCurrentMonth(new Date()),
+		GenerateCalendarOfCurrentMonth(currentCalendarDate),
+		schedulesOfCurrentMonth
+	);
+	const test_calendarOfCurrentMonth = test_mergePeopleInfoAndCalendar(
+		GenerateCalendarOfCurrentMonth(currentCalendarDate),
 		schedulesOfCurrentMonth
 	);
 
@@ -107,8 +147,8 @@ function StudyManager() {
 
 	const handleCreateSchedule = (personInfo) => {
 		setSchedulesOfCurrentMonth(schedulesOfCurrentMonth.concat([personInfo]));
-		console.log(schedulesOfCurrentMonth);
 	};
+	console.log("Study Manager render");
 
 	// TODO: samplePeopleInfo가 Calendar에 바로 반영이 되지 않고 있음
 	// TODO: 다른 day를 클릭했을 때, create box가 사라지지 않음. 아예 detail view를 없애고 난 후, 다시 열어보면  create box가 사라져있음.
@@ -116,8 +156,8 @@ function StudyManager() {
 		<div>
 			<Calendar
 				currentCalendarDate={currentCalendarDate}
-				schedulesOfCurrentMonth={schedulesOfCurrentMonth}
-				calendarOfCurrentMonth={calendarOfCurrentMonth}
+				schedulesOfCurrentMonth={test_schedulesOfCurrentMonth}
+				calendarOfCurrentMonth={test_calendarOfCurrentMonth}
 				onMoveCalendarMonth={handleMoveCalendarMonth}
 				onSelectDayForDetail={handleSelectDayForDetail}
 			></Calendar>

@@ -30,30 +30,47 @@ function CalendarBody({
 		});
 	}, [clickedDay, selectedDay]);
 
+	function getSchedulesOfCurrentDay(
+		scheduleIdsOfCurrentDay,
+		schedulesOfCurrentMonth
+	) {
+		let schedules = [];
+		for (const scheduleId of scheduleIdsOfCurrentDay) {
+			schedules.push(schedulesOfCurrentMonth.get(scheduleId));
+		}
+		return schedules;
+	}
+
 	return (
 		<table>
 			<thead>
 				<CalendarDaysOfWeek></CalendarDaysOfWeek>
 			</thead>
 			<tbody>
-				{calendarOfCurrentMonth.map((week) => (
-					<tr key={week.at(0).currentDay}>
-						{week.map((day) => (
+				{calendarOfCurrentMonth.map((calendarWeek) => (
+					<tr key={calendarWeek.at(0).currentDay}>
+						{calendarWeek.map((calendarDay) => (
 							<td
-								key={day.currentDay}
-								onClick={() => handleClickCalendarDay(day.currentDay)}
+								key={calendarDay.currentDay}
+								onClick={() => handleClickCalendarDay(calendarDay.currentDay)}
 							>
 								<CalendarDay
-									currentDay={day.currentDay}
+									currentDay={calendarDay.currentDay}
 									isClicked={
-										clickedDay && compareAsc(day.currentDay, selectedDay) === 0
+										clickedDay &&
+										compareAsc(calendarDay.currentDay, selectedDay) === 0
 											? true
 											: false
 									}
-									isToday={day.isToday}
-									isCurrentMonth={day.isCurMonth}
+									isToday={calendarDay.isToday}
+									isCurrentMonth={calendarDay.isCurMonth}
 									schedulesOfCurrentDay={
-										"peopleInfo" in day ? day.peopleInfo : null
+										"schedules" in calendarDay
+											? getSchedulesOfCurrentDay(
+													calendarDay["schedules"],
+													schedulesOfCurrentMonth
+											  )
+											: null
 									}
 								></CalendarDay>
 							</td>
@@ -66,7 +83,7 @@ function CalendarBody({
 }
 CalendarBody.propTypes = {
 	currentDay: PropTypes.instanceOf(Date).isRequired,
-	schedulesOfCurrentMonth: PropTypes.array,
+	schedulesOfCurrentMonth: PropTypes.instanceOf(Map).isRequired,
 	onSelectDayForDetail: PropTypes.func.isRequired,
 };
 export default CalendarBody;
