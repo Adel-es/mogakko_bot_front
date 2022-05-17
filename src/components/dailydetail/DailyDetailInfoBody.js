@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CreateScheduleButton from "../schedule/CreateScheduleButton";
 import CreateScheduleBox from "../schedule/CreateScheduleBox";
 import DetailPersonTag from "../persontag/DetailPersonTag";
@@ -17,9 +17,12 @@ function DailyDetailInfoBody({
 	onCreateSchedule,
 }) {
 	const [clickedCreateButton, setClickedCreateButton] = useState(false);
-	const handleClickCreateScheduleButton = (clicked) => {
-		setClickedCreateButton(clicked);
+	const handleClickCreateScheduleButton = () => {
+		setClickedCreateButton((prev) => !prev);
 	};
+	useEffect(() => {
+		setClickedCreateButton(false);
+	}, [selectedDay]);
 
 	return (
 		<PersonTagAlignCenter>
