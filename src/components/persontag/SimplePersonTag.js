@@ -5,6 +5,7 @@ function SimplePersonTag({ name }) {
 const Tag = styled.div`
 	--font-size: 12px;
 	font-size: var(--font-size);
+	color: black;
 
 	min-width: 20%;
 	max-width: 80%;

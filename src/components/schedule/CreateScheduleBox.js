@@ -27,11 +27,13 @@ function CreateScheduleBox({ selectedDay, onCreateSchedule }) {
 		<Box>
 			<TimeInputBox
 				timeText={"시작 시각"}
+				initDate={selectedDay}
 				minDateOfDatePicker={new Date()}
 				onSelectDate={handleSelectStartDate}
 			></TimeInputBox>
 			<TimeInputBox
 				timeText={"종료 시각"} // TODO: minDate가 시작 시각 이후로 잡히게 하기
+				initDate={selectedDay}
 				minDateOfDatePicker={startDate}
 				onSelectDate={handleSelectEndDate}
 			></TimeInputBox>

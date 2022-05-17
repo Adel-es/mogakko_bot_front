@@ -6,9 +6,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 //TODO: ScheduleInputBox로 이름 변경하기
-function TimeInputBox({ timeText, minDateOfDatePicker, onSelectDate }) {
+function TimeInputBox({
+	timeText,
+	initDate,
+	minDateOfDatePicker,
+	onSelectDate,
+}) {
 	const [time, setTime] = useState("12:00");
-	const [date, setDate] = useState(minDateOfDatePicker);
+	const [date, setDate] = useState(initDate);
 	const [minDate, setMinDate] = useState(minDateOfDatePicker);
 
 	useEffect(() => {
