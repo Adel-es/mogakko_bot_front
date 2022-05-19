@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-function CreateScheduleButton({ onClickCreateScheduleButton }) {
+function CreateScheduleButton({ onClickCreateScheduleButton } : { onClickCreateScheduleButton : any}) {
 	return (
 		<CreationButton onClick={onClickCreateScheduleButton}>+</CreationButton>
 	);

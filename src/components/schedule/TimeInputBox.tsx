@@ -6,12 +6,19 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 //TODO: ScheduleInputBox로 이름 변경하기
+interface ScheduleInputBoxProp {
+	timeText: string,
+	initDate: Date,
+	minDateOfDatePicker: Date,
+	onSelectDate: any,
+}
+
 function TimeInputBox({
 	timeText,
 	initDate,
 	minDateOfDatePicker,
 	onSelectDate,
-}) {
+} : ScheduleInputBoxProp) {
 	const [time, setTime] = useState("12:00");
 	const [date, setDate] = useState(initDate);
 	const [minDate, setMinDate] = useState(minDateOfDatePicker);
@@ -20,24 +27,24 @@ function TimeInputBox({
 		setMinDate(minDateOfDatePicker);
 	}, [minDateOfDatePicker]);
 
-	const handleChangeTime = (event) => {
+	const handleChangeTime = (event: any) => {
 		// TODO: date picker의 clock으로 바꾸기
 		setTime(event.target.value);
 		const [hour, minute] = event.target.value.split(":", 2);
 		date.setHours(Number(hour), Number(minute));
 		onSelectDate(date);
 	};
-	const handleChangeDate = (_date) => {
+	const handleChangeDate = (_date: Date) => {
 		setDate(_date);
 		const [hour, minute] = time.split(":", 2);
 		_date.setHours(Number(hour), Number(minute));
 		onSelectDate(_date);
 	};
-	const CustomDateInput = forwardRef(({ value, onClick, onChange }, ref) => (
+	const CustomDateInput = forwardRef<HTMLInputElement>((props, ref) => (
 		<DateInput
-			value={value}
-			onClick={onClick}
-			onChange={onChange}
+			// value={value}
+			// onClick={onClick}
+			// onChange={onChange}
 			ref={ref}
 		></DateInput>
 	));
@@ -48,7 +55,7 @@ function TimeInputBox({
 				<DatePicker
 					selected={date}
 					locale={ko}
-					onChange={(date) => handleChangeDate(date)}
+					onChange={(date : Date) => handleChangeDate(date!)}
 					dateFormat="yyyy-MM-dd (eee)"
 					minDate={minDate}
 					customInput={<CustomDateInput />}
@@ -57,7 +64,6 @@ function TimeInputBox({
 			<DateWrapper>
 				<TimeInput
 					value={time}
-					mode="time"
 					onChange={handleChangeTime}
 				></TimeInput>
 			</DateWrapper>

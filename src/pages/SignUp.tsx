@@ -9,21 +9,21 @@ function SignUp() {
 	const [confirmPassword, setConfirmPasswor] = useState("");
 	const [register, setRegister] = useState(false);
 
-	const onChangeID = (event) => {
+	const onChangeID = (event : any) => {
 		console.log("(debugging)" + event.target.value);
 		// setDiscordID(state.value);
 	};
 	const onClickID = () => {
 		setIsCorrectID(true);
 	};
-	const onChangeCertNum = (event) => {
+	const onChangeCertNum = (event : any) => {
 		console.log("(debugging)" + event.target.value);
 	};
 	const onClickCertNum = () => setIsCorrectCertNum(true);
-	const onChangePassword = (event) => {
+	const onChangePassword = (event : any) => {
 		console.log("(debugging)" + event.target.value);
 	};
-	const onChangeConfirmPassword = (event) => {
+	const onChangeConfirmPassword = (event : any) => {
 		console.log("(debugging)" + event.target.value);
 	};
 	const onClickRegister = () => setRegister(true);

@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-function SignIn({ history }) {
+function SignIn() {
 	const [discordID, setDiscordID] = useState("");
 	const [password, setPassword] = useState("");
 	const [signIn, setSignIn] = useState(false);
 	const navigate = useNavigate();
-	const onChangeID = (event) => {
+	const onChangeID = (event: any) => {
 		console.log("(debugging) : " + event.target.value);
 		setDiscordID(event.target.value);
 	};
-	const onChangePassword = (event) => {
+	const onChangePassword = (event: any) => {
 		console.log("(debugging) : " + event.target.value);
 		setPassword(event.target.value);
 	};
@@ -19,7 +19,7 @@ function SignIn({ history }) {
 	};
 	useEffect(() => {
 		if (true === signIn) {
-			navigate("/manage");
+			navigate("/schedule");
 		}
 	}, [signIn]);
 	function ChangeForm() {

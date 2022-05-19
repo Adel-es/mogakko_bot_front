@@ -2,9 +2,9 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import TimeInputBox from "./TimeInputBox";
-import ScheduleInfoStruct from "../../utils/schedule/ScheduleInfoStruct";
+import {ScheduleInfoStruct} from "../../utils/schedule/ScheduleInfoStruct";
 
-function CreateScheduleBox({ selectedDay, onCreateSchedule }) {
+function CreateScheduleBox({ selectedDay, onCreateSchedule } : { selectedDay:Date, onCreateSchedule:any }) {
 	const [startDate, setStartDate] = useState(selectedDay);
 	const [endDate, setEndDate] = useState(selectedDay);
 	// selecteDay click 했을 땐 					: 시작 시각, 종료시각의 date, minDate가 -> selectedDay로 바뀌어야 함.
@@ -15,12 +15,12 @@ function CreateScheduleBox({ selectedDay, onCreateSchedule }) {
 	const handleClickSubmit = () => {
 		console.log(startDate);
 		console.log(endDate);
-		onCreateSchedule(ScheduleInfoStruct("test", startDate, endDate));
+		onCreateSchedule(ScheduleInfoStruct(1, "test", startDate, endDate, "testTitle", "testContent"));
 	};
-	const handleSelectStartDate = (_startDate) => {
+	const handleSelectStartDate = (_startDate : Date) => {
 		setStartDate(_startDate);
 	};
-	const handleSelectEndDate = (_endDate) => {
+	const handleSelectEndDate = (_endDate : Date) => {
 		setEndDate(_endDate);
 	};
 	return (

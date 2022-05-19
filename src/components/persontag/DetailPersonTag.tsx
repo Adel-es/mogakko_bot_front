@@ -1,6 +1,12 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
-function DetailPersonTag({ name, startTime, endTime }) {
+
+interface DetailPersonTagProp { 
+	name: string, 
+	startTime: string, 
+	endTime: string 
+};
+function DetailPersonTag({ name, startTime, endTime } : DetailPersonTagProp) {
 	return (
 		<Tag>
 			<TagName>{name}</TagName>

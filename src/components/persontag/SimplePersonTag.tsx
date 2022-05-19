@@ -1,5 +1,5 @@
 import styled from "styled-components";
-function SimplePersonTag({ name }) {
+function SimplePersonTag({ name } : {name: string}) {
 	return <Tag>{name}</Tag>;
 }
 const Tag = styled.div`

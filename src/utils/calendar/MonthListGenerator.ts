@@ -8,7 +8,11 @@ import {
 
 const DATE_WEEK_LENGTH = 7;
 
-const GenerateOneMonth = (monthStart) => {
+interface EachDateType {
+	date: Date,
+	schedules: Set<number>,
+};
+const GenerateOneMonth = (monthStart: Date) : Map<string, EachDateType> => {
 	const daysOfMonth = new Map();
 	const monthEnd = endOfMonth(monthStart);
 	let currentDay = startOfWeek(monthStart);
@@ -24,8 +28,8 @@ const GenerateOneMonth = (monthStart) => {
 	return daysOfMonth;
 };
 
-const GenerateCalendarOfCurrentMonth = (currentCalendarDate) => {
+const GenerateCalendarOfCurrentMonth = (currentCalendarDate: Date) => {
 	return GenerateOneMonth(startOfMonth(currentCalendarDate));
 };
 
-export { GenerateCalendarOfCurrentMonth };
+export { GenerateCalendarOfCurrentMonth, EachDateType };

@@ -5,17 +5,23 @@ import { useState, useEffect } from "react";
 import CreateScheduleButton from "../schedule/CreateScheduleButton";
 import CreateScheduleBox from "../schedule/CreateScheduleBox";
 import DetailPersonTag from "../persontag/DetailPersonTag";
+import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
 
-function getTimeString(date) {
+function getTimeString(date : Date) : string{
 	const timeString = format(date, "HH") + ":" + format(date, "mm");
 	return timeString;
 }
 
+interface DailyDetailInfoBodyProp{
+	selectedDay : Date,
+	schedulesOfSelectedDay : Array<Schedule>,
+	onCreateSchedule : any,
+}
 function DailyDetailInfoBody({
 	selectedDay,
 	schedulesOfSelectedDay,
 	onCreateSchedule,
-}) {
+} : DailyDetailInfoBodyProp) {
 	const [clickedCreateButton, setClickedCreateButton] = useState(false);
 	const handleClickCreateScheduleButton = () => {
 		setClickedCreateButton((prev) => !prev);
@@ -26,7 +32,7 @@ function DailyDetailInfoBody({
 
 	return (
 		<PersonTagAlignCenter>
-			{schedulesOfSelectedDay.map((personInfo, index) => (
+			{schedulesOfSelectedDay.map((personInfo: Schedule, index: number) => (
 				<DetailPersonTag
 					key={index} // TODO: index를 나중에 DB에서 id를 받아와서 바꾸기
 					name={personInfo.name}

@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import styled from "styled-components";
-function DailyDetailHeader({ selectedDay }) {
+function DailyDetailHeader({ selectedDay } : { selectedDay : Date }) {
 	const getYear = format(selectedDay, "yyyy");
 	const getMonth = format(selectedDay, "MM");
 	const getDay = format(selectedDay, "dd");

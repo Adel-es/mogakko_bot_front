@@ -1,11 +1,19 @@
 import PropTypes from "prop-types";
+import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
 import DailyDetailHeader from "./DailyDetailHeader";
 import DailyDetailInfoBody from "./DailyDetailInfoBody";
+
+
+interface DailyDetailInfoProp{
+	selectedDay : Date,
+	schedulesOfSelectedDay : Array<Schedule>,
+	onCreateSchedule : any,
+}
 function DailyDetailInfo({
 	selectedDay,
 	schedulesOfSelectedDay,
 	onCreateSchedule,
-}) {
+} : DailyDetailInfoProp) {
 	return (
 		<div>
 			<DailyDetailHeader selectedDay={selectedDay}></DailyDetailHeader>

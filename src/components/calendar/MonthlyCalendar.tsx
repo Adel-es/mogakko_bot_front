@@ -1,23 +1,34 @@
-import { Calendar } from "react-calendar";
+import Calendar, { CalendarTileProperties, Detail } from "react-calendar";
 import { useState } from "react";
 import styled from "styled-components";
 import SimplePersonTag from "../persontag/SimplePersonTag";
+import { EachDateType } from "../../utils/calendar/MonthListGenerator";
+import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
+// test
+import ScheduleInputBox from "../schedule/ScheduleInputBox";
 
+interface MonthlyCalendarProp{
+	calendarOfCurrentMonth: Map<string, EachDateType>,
+	schedulesOfCurrentMonth: Map<number, Schedule>,
+	onClickDayOnCalendar: any,
+	onActiveStartDateChangeOnCalendar: any,
+};
 function MonthlyCalendar({
 	calendarOfCurrentMonth,
 	schedulesOfCurrentMonth,
 	onClickDayOnCalendar,
 	onActiveStartDateChangeOnCalendar,
-}) {
+}: MonthlyCalendarProp) {
 	// TODO:
 	// const handle
-	function tileContent({ date, view }) {
+	function tileContent({ date, view } : { date:Date, view: Detail }) : any{
 		if (view === "month") {
 			if (!calendarOfCurrentMonth.has(date.toDateString()))
 				return <SimplePersonTagWrapper></SimplePersonTagWrapper>;
 
+			
 			const todayScheduleIds = Array.from(
-				calendarOfCurrentMonth.get(date.toDateString())["schedules"]
+				calendarOfCurrentMonth.get(date.toDateString())!["schedules"]
 			);
 
 			return (
@@ -25,7 +36,7 @@ function MonthlyCalendar({
 					{todayScheduleIds.map((id, index) => (
 						<SimplePersonTag
 							key={index}
-							name={schedulesOfCurrentMonth.get(id)["name"]}
+							name={schedulesOfCurrentMonth.get(id)!["name"]}
 						></SimplePersonTag>
 					))}
 				</SimplePersonTagWrapper>
@@ -46,6 +57,7 @@ function MonthlyCalendar({
 						: null
 				}
 			></Calendar>
+			<ScheduleInputBox startDate={new Date()} endDate={new Date()}></ScheduleInputBox>
 		</CalendarWrapper>
 	);
 }

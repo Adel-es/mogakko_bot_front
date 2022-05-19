@@ -1,8 +1,9 @@
 import DailyDetailInfo from "../components/dailydetail/DailyDetailInfo";
-import ScheduleInfoStruct from "../utils/schedule/ScheduleInfoStruct";
+import {Schedule, ScheduleInfoStruct} from "../utils/schedule/ScheduleInfoStruct";
 import { differenceInCalendarDays, addDays } from "date-fns";
 import { useState } from "react";
 import { GenerateCalendarOfCurrentMonth } from "../utils/calendar/MonthListGenerator";
+import { EachDateType } from "../utils/calendar/MonthListGenerator";
 import MonthlyCalendar from "../components/calendar/MonthlyCalendar";
 
 const samplePeopleInfo = [
@@ -41,9 +42,9 @@ const samplePeopleInfo = [
 ];
 
 function mergeCalendarAndSchedules(
-	calendarOfCurrentMonth,
-	schedulesOfCurrentMonth
-) {
+	calendarOfCurrentMonth: Map<string, EachDateType>,
+	schedulesOfCurrentMonth: Map<number, Schedule>
+) : Map<string, EachDateType>{
 	console.log("&&schedulesOfCurrentMonth: ", schedulesOfCurrentMonth);
 	for (let [key, schedule] of schedulesOfCurrentMonth) {
 		const distance = differenceInCalendarDays(
@@ -60,24 +61,24 @@ function mergeCalendarAndSchedules(
 		}
 		for (const date of containedDates) {
 			if (!calendarOfCurrentMonth.has(date)) continue;
-			calendarOfCurrentMonth.get(date)["schedules"].add(schedule.id);
+			calendarOfCurrentMonth.get(date)!["schedules"].add(schedule.id);
 		}
 	}
 	return calendarOfCurrentMonth;
 }
 
 function getSchedulesOnSelectedDay(
-	selectedDay,
-	calendarOfCurrentMonth,
-	schedulesOfCurrentMonth
-) {
+	selectedDay: Date,
+	calendarOfCurrentMonth: Map<string, EachDateType>,
+	schedulesOfCurrentMonth: Map<number, Schedule>
+) : Array<Schedule> {
 	if (!calendarOfCurrentMonth.has(selectedDay.toDateString())) return [];
 	console.log("in func:", selectedDay);
 	const idsOfSelectedDay = Array.from(
-		calendarOfCurrentMonth.get(selectedDay.toDateString())["schedules"]
+		calendarOfCurrentMonth.get(selectedDay.toDateString())!["schedules"]
 	);
 	const schedulesOfSelectedDay = idsOfSelectedDay.map((id) =>
-		schedulesOfCurrentMonth.get(id)
+		schedulesOfCurrentMonth.get(id)!
 	);
 
 	return schedulesOfSelectedDay;
@@ -107,7 +108,7 @@ function StudyManager() {
 		schedulesOfCurrentMonth
 	);
 
-	const handleClickDayOnCalendar = ({ _selectedDay }) => {
+	const handleClickDayOnCalendar = ({ _selectedDay } : { _selectedDay: Date }) => {
 		if (selectedDay.toDateString() === _selectedDay.toDateString()) {
 			setDayClicked((current) => !current);
 		} else {
@@ -115,12 +116,12 @@ function StudyManager() {
 			setSelectedDay(_selectedDay);
 		}
 	};
-	const handleActiveStartDateChangeOnCalendar = ({ _startDate }) => {
-		setStartDateOnCalendar(_startDate);
+	const handleActiveStartDateChangeOnCalendar = (prop:{startDate:Date}) => {
+		setStartDateOnCalendar(prop.startDate);
 	};
 
 	// TODO: create가 안됨.
-	const handleCreateSchedule = (personInfo) => {
+	const handleCreateSchedule = (personInfo: Schedule) => {
 		const tempId = schedulesOfCurrentMonth.size + 1;
 		setSchedulesOfCurrentMonth((prev) => new Map(prev).set(tempId, personInfo));
 	};
