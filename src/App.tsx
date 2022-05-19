@@ -5,16 +5,16 @@ import SignUp from "./pages/SignUp";
 import ScheduleManager from "./pages/ScheduleManager";
 
 function App() {
-	return (
-		<Router>
-			<Routes>
-				<Route path="/" element={<Home />}></Route>
-				<Route path="/signin" element={<SignIn />}></Route>
-				<Route path="/signup" element={<SignUp />}></Route>
-				<Route path="/schedule" element={<ScheduleManager />}></Route>
-			</Routes>
-		</Router>
-	);
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/signin" element={<SignIn />}></Route>
+        <Route path="/signup" element={<SignUp />}></Route>
+        <Route path="/schedule" element={<ScheduleManager />}></Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
