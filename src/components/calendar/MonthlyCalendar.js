@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import SimplePersonTag from "../persontag/SimplePersonTag";
 
-function CustomCalendar({
+function MonthlyCalendar({
 	calendarOfCurrentMonth,
 	schedulesOfCurrentMonth,
 	onClickDayOnCalendar,
@@ -178,4 +178,4 @@ const CalendarWrapper = styled.div`
 		background-color: #e6e6e6;
 	}
 `;
-export default CustomCalendar;
+export default MonthlyCalendar;

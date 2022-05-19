@@ -3,7 +3,7 @@ import ScheduleInfoStruct from "../utils/schedule/ScheduleInfoStruct";
 import { differenceInCalendarDays, addDays } from "date-fns";
 import { useState } from "react";
 import { GenerateCalendarOfCurrentMonth } from "../utils/calendar/MonthListGenerator";
-import CustomCalendar from "../components/calendar/CustomCalendar";
+import MonthlyCalendar from "../components/calendar/MonthlyCalendar";
 
 const samplePeopleInfo = [
 	ScheduleInfoStruct(
@@ -132,14 +132,14 @@ function StudyManager() {
 	// TODO: 다른 day를 클릭했을 때, create box가 사라지지 않음. 아예 detail view를 없애고 난 후, 다시 열어보면  create box가 사라져있음.
 	return (
 		<div>
-			<CustomCalendar
+			<MonthlyCalendar
 				calendarOfCurrentMonth={calendarOfCurrentMonth}
 				schedulesOfCurrentMonth={schedulesOfCurrentMonth}
 				onClickDayOnCalendar={handleClickDayOnCalendar}
 				onActiveStartDateChangeOnCalendar={
 					handleActiveStartDateChangeOnCalendar
 				}
-			></CustomCalendar>
+			></MonthlyCalendar>
 			{dayClicked ? (
 				<DailyDetailInfo
 					selectedDay={selectedDay}
