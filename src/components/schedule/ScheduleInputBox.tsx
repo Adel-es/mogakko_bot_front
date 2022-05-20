@@ -1,59 +1,91 @@
 import { useState } from "react";
-import styled from "styled-components";
 import TextField from "@mui/material/TextField";
-import { DatePicker } from "@material-ui/pickers";
+import { List, ListItem, ListItemText } from "@mui/material";
+import DateAndTimePicker from "./DateAndTimePicker";
 
-interface ScheduleInputProps {
-  title: string;
-  startDate: Date;
-  endDate: Date;
-  content: string;
+export interface ScheduleInputProps {
+	title?: string;
+	startDate: Date;
+	endDate: Date;
+	content?: string;
 }
 
-function ScheduleInputBox({
-  title,
-  startDate,
-  endDate,
-  content,
-}: ScheduleInputProps) {
-  const [_title, setTitle] = useState(title);
-  const [_startDate, setStartDate] = useState(startDate);
-  const [_endDate, setEndDate] = useState(endDate);
-  const [_content, setContent] = useState(content);
-
-  const handleChange = (date: Date) => {
-    setStartDate(date);
-  };
-  return (
-    <InputBoxWrapper>
-      <TextField label="제목" defaultValue={_title}></TextField>
-      <div>
-        <DatePicker
-          label="시작 시간"
-          value={_startDate}
-          onChange={setStartDate}
-        ></DatePicker>
-      </div>
-      <TextField
-        label="내용"
-        multiline
-        rows={4}
-        defaultValue={_content}
-      ></TextField>
-    </InputBoxWrapper>
-  );
-}
-
-ScheduleInputBox.defaultProps = {
-  title: "(제목 없음)",
-  startDate: new Date(),
-  endDate: new Date(),
-  content: "(내용 없음)",
+const defaultProps: ScheduleInputProps = {
+	title: "(제목 없음)",
+	startDate: new Date(),
+	endDate: new Date(),
+	content: "(내용 없음)",
 };
 
-const InputBoxWrapper = styled.div``;
-const InputTitle = styled.div``;
-const InputDate = styled.div``;
-const InputContent = styled.div``;
+function ScheduleInputBox({
+	defaultContent,
+}: {
+	defaultContent: ScheduleInputProps;
+}) {
+	const [title, setTitle] = useState(defaultContent.title);
+	const [startDate, setStartDate] = useState<Date | null>(
+		defaultContent.startDate
+	);
+	const [startTime, setStartTime] = useState<Date | null>(
+		defaultContent.startDate
+	);
+	const [endDate, setEndDate] = useState<Date | null>(defaultContent.endDate);
+	const [endTime, setEndTime] = useState<Date | null>(defaultContent.endDate);
+	const [content, setContent] = useState(defaultContent.content);
+
+	const handleChange = (date: Date) => {
+		setStartDate(date);
+	};
+	return (
+		<List
+			sx={{
+				width: "100%",
+			}}
+		>
+			<ListItem>
+				<TextField
+					label="제목"
+					placeholder={title}
+					fullWidth
+					onChange={(event: any) => setTitle(event.target.value)}
+				></TextField>
+			</ListItem>
+			<ListItem>
+				<DateAndTimePicker
+					date={startDate}
+					time={startTime}
+					minDate={new Date()}
+					onChangeDate={setStartDate}
+					onChangeTime={setStartTime}
+				></DateAndTimePicker>
+				<ListItemText
+					primary="~"
+					sx={{
+						textAlign: "center",
+					}}
+				></ListItemText>
+				<DateAndTimePicker
+					date={endDate}
+					time={endTime}
+					minDate={startDate}
+					onChangeDate={setEndDate}
+					onChangeTime={setEndTime}
+				></DateAndTimePicker>
+			</ListItem>
+			<ListItem>
+				<TextField
+					label="내용"
+					multiline
+					rows={4}
+					placeholder={content}
+					fullWidth
+					onChange={(event: any) => setContent(event.target.value)}
+				></TextField>
+			</ListItem>
+		</List>
+	);
+}
+
+ScheduleInputBox.defaultProps = { defaultContent: defaultProps };
 
 export default ScheduleInputBox;
