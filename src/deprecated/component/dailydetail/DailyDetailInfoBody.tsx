@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import DetailPersonTag from "../persontag/DetailPersonTag";
-import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
+import { Schedule } from "../../../utils/schedule/ScheduleInfoStruct";
 
 function getTimeString(date: Date): string {
 	const timeString = format(date, "HH") + ":" + format(date, "mm");
@@ -34,8 +34,8 @@ function DailyDetailInfoBody({
 				<DetailPersonTag
 					key={index} // TODO: index를 나중에 DB에서 id를 받아와서 바꾸기
 					name={personInfo.name}
-					startTime={getTimeString(personInfo.startTime)}
-					endTime={getTimeString(personInfo.endTime)}
+					startTime={getTimeString(personInfo.start)}
+					endTime={getTimeString(personInfo.end)}
 				></DetailPersonTag>
 			))}
 			{/* {clickedCreateButton ? (

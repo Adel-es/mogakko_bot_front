@@ -7,8 +7,6 @@ import { differenceInCalendarDays, addDays } from "date-fns";
 import { useState } from "react";
 import { GenerateCalendarOfCurrentMonth } from "../utils/calendar/MonthListGenerator";
 import { EachDateType } from "../utils/calendar/MonthListGenerator";
-import MonthlyCalendar from "../components/calendar/MonthlyCalendar";
-import ScheduleInputBox from "../components/schedule/ScheduleInputBox";
 import ScheduleInputPopUpBox from "../components/schedule/ScheduleInputPopUpBox";
 
 const samplePeopleInfo = [
@@ -158,19 +156,6 @@ function StudyManager() {
 				onOpen={dayClicked}
 				onClose={handleCloseSchedulePopupBox}
 			></ScheduleInputPopUpBox>
-			{/* {dayClicked ? (
-				<ScheduleInputBox
-					startDate={new Date()}
-					endDate={new Date()}
-				></ScheduleInputBox>
-			) : (
-				// <DailyDetailInfo
-				//   selectedDay={selectedDay}
-				//   schedulesOfSelectedDay={schedulesOfSelectedDay}
-				//   onCreateSchedule={handleCreateSchedule}
-				// ></DailyDetailInfo>
-				""
-			)} */}
 		</div>
 	);
 }
