@@ -2,6 +2,14 @@ import TextField from "@mui/material/TextField";
 import { List, ListItem, ListItemText } from "@mui/material";
 import DateAndTimePicker from "./DateAndTimePicker";
 import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
+import { styled } from "@mui/material/styles";
+
+const CustomTextField = styled(TextField)(() => ({
+	/** disable 시, 글자 색상 설정 */
+	".MuiInputBase-input.Mui-disabled": {
+		WebkitTextFillColor: "black",
+	},
+}));
 
 export interface ScheduleInputProps {
 	title?: string;
@@ -14,6 +22,7 @@ function ScheduleInputBox({
 	startDate,
 	endDate,
 	content,
+	readonly,
 	onSave,
 }: {
 	title: {
@@ -32,8 +41,11 @@ function ScheduleInputBox({
 		value: string;
 		setValue: React.Dispatch<React.SetStateAction<string>>;
 	};
+	readonly: boolean;
 	onSave?: (schedule: Schedule) => void;
 }) {
+	const defaultTitle = "(제목 없음)";
+	const defaultContent = "(내용 없음)";
 	return (
 		<List
 			sx={{
@@ -41,40 +53,40 @@ function ScheduleInputBox({
 			}}
 		>
 			<ListItem>
-				<TextField
+				<CustomTextField
 					label="제목"
-					placeholder={title.value}
+					placeholder={defaultTitle}
+					value={title.value}
 					fullWidth
 					onChange={(event: any) => title.setValue(event.target.value)}
-				></TextField>
+					disabled={readonly}
+				></CustomTextField>
 			</ListItem>
 			<ListItem>
 				<DateAndTimePicker
 					date={startDate.value}
-					// minDate={new Date()}
 					onChangeDate={startDate.setValue}
+					readonly={readonly}
 				></DateAndTimePicker>
-				<ListItemText
-					primary="~"
-					sx={{
-						textAlign: "center",
-					}}
-				></ListItemText>
+				<ListItemText primary="~"></ListItemText>
 				<DateAndTimePicker
 					date={endDate.value}
 					minDate={startDate.value}
 					onChangeDate={endDate.setValue}
+					readonly={readonly}
 				></DateAndTimePicker>
 			</ListItem>
 			<ListItem>
-				<TextField
+				<CustomTextField
 					label="내용"
 					multiline
 					rows={4}
-					placeholder={content.value}
+					value={content.value}
+					placeholder={defaultContent}
 					fullWidth
 					onChange={(event: any) => content.setValue(event.target.value)}
-				></TextField>
+					disabled={readonly}
+				></CustomTextField>
 			</ListItem>
 		</List>
 	);

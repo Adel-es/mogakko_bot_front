@@ -4,22 +4,25 @@ import ScheduleInputBox, { ScheduleInputProps } from "./ScheduleInputBox";
 import { useState } from "react";
 
 function ScheduleInputPopUpBox({
-	defaultContent: defaultSchedule,
+	defaultSchedule,
 	open,
+	readonly = false,
 	onClose,
 	onSave,
 	onModify,
 	onDelete,
 }: {
-	defaultContent: ScheduleInputProps;
+	defaultSchedule: ScheduleInputProps;
 	open: boolean;
+	readonly?: boolean;
 	onClose: () => void;
 	onSave?: (personInfo: Schedule) => void;
 	onModify?: (...props: any | null) => {};
 	onDelete?: (...props: any | null) => {};
 }) {
-	const defaultTitle = "(제목 없음)";
-	const defaultContent = "(내용 없음)";
+	const defaultTitle = "";
+	const defaultContent = "";
+
 	const [title, setTitle] = useState<string>(
 		defaultSchedule.title !== undefined ? defaultSchedule.title : defaultTitle
 	);
@@ -63,6 +66,7 @@ function ScheduleInputPopUpBox({
 				startDate={{ value: startDate, setValue: setStartDate }}
 				endDate={{ value: endDate, setValue: setEndDate }}
 				content={{ value: content, setValue: setContent }}
+				readonly={readonly}
 			></ScheduleInputBox>
 			<DialogActions>
 				<Button onClick={onClose}>취소</Button>

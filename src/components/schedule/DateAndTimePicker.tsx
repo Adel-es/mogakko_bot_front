@@ -10,15 +10,29 @@ import {
 	setHourMinute,
 } from "../../utils/time/TimeController";
 import { compareDesc } from "date-fns";
+import { styled } from "@mui/material/styles";
+
+const CustomTextField = styled(TextField)(() => ({
+	/** disable 시, 글자 색상 설정 */
+	".MuiInputBase-input.Mui-disabled": {
+		WebkitTextFillColor: "black",
+	},
+	input: {
+		textAlign: "center",
+		fontSize: 15,
+	},
+}));
 
 interface DateAndTimePickerProp {
 	date: Date;
 	minDate?: Date | undefined;
+	readonly: boolean;
 	onChangeDate: React.Dispatch<React.SetStateAction<Date>>;
 }
 function DateAndTimePicker({
 	date,
 	minDate,
+	readonly,
 	onChangeDate,
 }: DateAndTimePickerProp) {
 	const handleChangeDate = (value: Date | null) => {
@@ -40,19 +54,20 @@ function DateAndTimePicker({
 		<LocalizationProvider dateAdapter={AdapterDateFns}>
 			<DatePicker
 				// label="날짜"
+				mask={""}
 				value={date}
 				minDate={minDate}
 				onChange={handleChangeDate}
+				disabled={readonly}
+				disableOpenPicker={readonly}
 				renderInput={(params) => (
-					<TextField
+					<CustomTextField
 						{...params}
 						variant="standard"
 						size="small"
 						sx={{
 							width: "30%",
 							maxWidth: "120px",
-							textAlign: "center",
-							fontSize: 10,
 							mx: 1,
 						}}
 					/>
@@ -64,15 +79,16 @@ function DateAndTimePicker({
 				onChange={handleChangeTime}
 				// minutesStep={10}
 				disableMaskedInput={true}
+				disabled={readonly}
+				disableOpenPicker={readonly}
 				renderInput={(params) => (
-					<TextField
+					<CustomTextField
 						{...params}
 						variant="standard"
 						size="small"
 						sx={{
 							width: "30%",
 							maxWidth: "120px",
-							textAlign: "center",
 							fontSize: 10,
 							mx: 1,
 						}}

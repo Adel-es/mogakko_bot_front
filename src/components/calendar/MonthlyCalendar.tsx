@@ -4,8 +4,9 @@ import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
 import { EachDateType } from "../../utils/calendar/MonthListGenerator";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import ScheduleInputPopUpBox from "../schedule/ScheduleInputPopUpBox";
+import { ScheduleInputProps } from "../schedule/ScheduleInputBox";
 
 const locales = {
 	"en-US": enUS,
@@ -29,39 +30,65 @@ function MonthlyCalendar({
 	schedulesOfCurrentMonth,
 	onCreateSchedule,
 }: MonthlyCalendarProp) {
-	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-	const [selected, setSelected] = useState<boolean>(false);
-	const onSelectSlot = useCallback((slotInfo: any) => {
-		setSelectedDate(slotInfo.slots[0]);
-		setSelected(true);
+	const [isSelectSlot, setIsSelectSlot] = useState<boolean>(false);
+	const [isSelectEvent, setIsSelectEvent] = useState<boolean>(false);
+	const defaultPropForScheduleBox = useRef<ScheduleInputProps>({
+		startDate: new Date(),
+		endDate: new Date(),
+	});
 
-		console.log(selectedDate);
+	const handleSelectSlot = useCallback((slotInfo: any) => {
+		const date = slotInfo.slots[0];
+		defaultPropForScheduleBox.current = { startDate: date, endDate: date };
+		setIsSelectSlot(true);
+	}, []);
+
+	const handleSelectEvent = useCallback((event: Schedule) => {
+		defaultPropForScheduleBox.current = {
+			title: event.title,
+			startDate: event.start,
+			endDate: event.end,
+			content: event.content,
+		};
+		setIsSelectEvent(true);
+
+		console.log(event);
 	}, []);
 
 	const handleCloseSchedulePopupBox = () => {
-		setSelected(false);
+		setIsSelectSlot(false);
+		setIsSelectEvent(false);
 	};
 
 	return (
 		<>
 			<Calendar
 				localizer={localizer}
-				startAccessor="start"
-				endAccessor="end"
 				style={{ minWidth: 600, height: 800 }}
 				events={Array.from(schedulesOfCurrentMonth.values())}
-				titleAccessor={"name"}
-				onSelectSlot={onSelectSlot}
+				startAccessor="start"
+				endAccessor="end"
+				titleAccessor="name"
 				selectable
+				onSelectSlot={handleSelectSlot}
+				onSelectEvent={handleSelectEvent}
 				views={["month", "day", "agenda"]}
 				popup
 			></Calendar>
-			{selected && (
+			{isSelectSlot && (
 				<ScheduleInputPopUpBox
-					defaultContent={{ startDate: selectedDate, endDate: selectedDate }}
-					open={selected}
+					defaultSchedule={defaultPropForScheduleBox.current}
+					open={isSelectSlot}
 					onClose={handleCloseSchedulePopupBox}
 					onSave={onCreateSchedule}
+				></ScheduleInputPopUpBox>
+			)}
+			{isSelectEvent && (
+				<ScheduleInputPopUpBox
+					defaultSchedule={defaultPropForScheduleBox.current}
+					open={isSelectEvent}
+					readonly={true}
+					onClose={handleCloseSchedulePopupBox}
 				></ScheduleInputPopUpBox>
 			)}
 		</>
