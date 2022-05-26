@@ -18,7 +18,7 @@ const localizer = dateFnsLocalizer({
 	locales,
 });
 
-interface MonthlyCalendarProp {
+interface ScheduleCalendarProp {
 	schedulesOfCurrentMonth: Map<number, Schedule>;
 	onCreateSchedule: (schedule: Schedule) => void;
 	onUpdateSchedule: (schedule: Schedule) => void;
@@ -34,12 +34,12 @@ function getDefaultSchedule(): Schedule {
 		content: "",
 	};
 }
-function MonthlyCalendar({
+function ScheduleCalendar({
 	schedulesOfCurrentMonth,
 	onCreateSchedule,
 	onUpdateSchedule,
 	onDeleteSchedule,
-}: MonthlyCalendarProp) {
+}: ScheduleCalendarProp) {
 	const [isSelectSlot, setIsSelectSlot] = useState<boolean>(false);
 	const [isSelectEvent, setIsSelectEvent] = useState<boolean>(false);
 	const defaultPropForScheduleBox = useRef<Schedule>(getDefaultSchedule());
@@ -104,4 +104,4 @@ function MonthlyCalendar({
 		</>
 	);
 }
-export default MonthlyCalendar;
+export default ScheduleCalendar;

@@ -1,7 +1,7 @@
 import { samplePeopleInfo } from "../utils/schedule/ScheduleInfoStruct";
 import { Schedule } from "../type/CommonInterfaces";
 import { useState, useRef } from "react";
-import MonthlyCalendar from "../components/calendar/MonthlyCalendar";
+import ScheduleCalendar from "../components/calendar/ScheduleCalendar";
 
 function StudyManager() {
 	const [schedulesOfCurrentMonth, setSchedulesOfCurrentMonth] = useState(
@@ -37,12 +37,12 @@ function StudyManager() {
 
 	return (
 		<div>
-			<MonthlyCalendar
+			<ScheduleCalendar
 				schedulesOfCurrentMonth={schedulesOfCurrentMonth}
 				onCreateSchedule={handleCreateSchedule}
 				onUpdateSchedule={handleUpdateSchedule}
 				onDeleteSchedule={handleDeleteSchedule}
-			></MonthlyCalendar>
+			></ScheduleCalendar>
 		</div>
 	);
 }
