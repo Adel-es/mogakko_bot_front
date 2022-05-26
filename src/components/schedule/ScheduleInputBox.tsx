@@ -1,7 +1,7 @@
-import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { List, ListItem, ListItemText } from "@mui/material";
 import DateAndTimePicker from "./DateAndTimePicker";
+import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
 
 export interface ScheduleInputProps {
 	title?: string;
@@ -9,29 +9,31 @@ export interface ScheduleInputProps {
 	endDate: Date;
 	content?: string;
 }
-
-const defaultProps: ScheduleInputProps = {
-	title: "(제목 없음)",
-	startDate: new Date(),
-	endDate: new Date(),
-	content: "(내용 없음)",
-};
-
 function ScheduleInputBox({
-	defaultContent,
+	title,
+	startDate,
+	endDate,
+	content,
+	onSave,
 }: {
-	defaultContent: ScheduleInputProps;
-}) {
-	const [title, setTitle] = useState(defaultContent.title);
-	const [startDate, setStartDate] = useState<Date>(defaultContent.startDate);
-	const [startTime, setStartTime] = useState<Date>(defaultContent.startDate);
-	const [endDate, setEndDate] = useState<Date>(defaultContent.endDate);
-	const [endTime, setEndTime] = useState<Date>(defaultContent.endDate);
-	const [content, setContent] = useState(defaultContent.content);
-
-	const handleChange = (date: Date) => {
-		setStartDate(date);
+	title: {
+		value: string;
+		setValue: React.Dispatch<React.SetStateAction<string>>;
 	};
+	startDate: {
+		value: Date;
+		setValue: React.Dispatch<React.SetStateAction<Date>>;
+	};
+	endDate: {
+		value: Date;
+		setValue: React.Dispatch<React.SetStateAction<Date>>;
+	};
+	content: {
+		value: string;
+		setValue: React.Dispatch<React.SetStateAction<string>>;
+	};
+	onSave?: (schedule: Schedule) => void;
+}) {
 	return (
 		<List
 			sx={{
@@ -41,18 +43,16 @@ function ScheduleInputBox({
 			<ListItem>
 				<TextField
 					label="제목"
-					placeholder={title}
+					placeholder={title.value}
 					fullWidth
-					onChange={(event: any) => setTitle(event.target.value)}
+					onChange={(event: any) => title.setValue(event.target.value)}
 				></TextField>
 			</ListItem>
 			<ListItem>
 				<DateAndTimePicker
-					date={startDate}
-					time={startTime}
+					date={startDate.value}
 					// minDate={new Date()}
-					onChangeDate={setStartDate}
-					onChangeTime={setStartTime}
+					onChangeDate={startDate.setValue}
 				></DateAndTimePicker>
 				<ListItemText
 					primary="~"
@@ -61,11 +61,9 @@ function ScheduleInputBox({
 					}}
 				></ListItemText>
 				<DateAndTimePicker
-					date={endDate}
-					time={endTime}
-					minDate={startDate}
-					onChangeDate={setEndDate}
-					onChangeTime={setEndTime}
+					date={endDate.value}
+					minDate={startDate.value}
+					onChangeDate={endDate.setValue}
 				></DateAndTimePicker>
 			</ListItem>
 			<ListItem>
@@ -73,15 +71,13 @@ function ScheduleInputBox({
 					label="내용"
 					multiline
 					rows={4}
-					placeholder={content}
+					placeholder={content.value}
 					fullWidth
-					onChange={(event: any) => setContent(event.target.value)}
+					onChange={(event: any) => content.setValue(event.target.value)}
 				></TextField>
 			</ListItem>
 		</List>
 	);
 }
-
-ScheduleInputBox.defaultProps = { defaultContent: defaultProps };
 
 export default ScheduleInputBox;

@@ -5,28 +5,44 @@ import {
 	DatePicker,
 	TimePicker,
 } from "@mui/x-date-pickers";
+import {
+	setYearMonthDate,
+	setHourMinute,
+} from "../../utils/time/TimeController";
+import { compareDesc } from "date-fns";
 
 interface DateAndTimePickerProp {
 	date: Date;
-	time: Date;
 	minDate?: Date | undefined;
-	onChangeDate: any;
-	onChangeTime: any;
+	onChangeDate: React.Dispatch<React.SetStateAction<Date>>;
 }
 function DateAndTimePicker({
 	date,
-	time,
 	minDate,
 	onChangeDate,
-	onChangeTime,
 }: DateAndTimePickerProp) {
+	const handleChangeDate = (value: Date | null) => {
+		onChangeDate((current: Date) => setYearMonthDate(current, value!));
+	};
+	const handleChangeTime = (value: Date | null) => {
+		onChangeDate((current: Date) => setHourMinute(current, value!));
+	};
+	function initDate() {
+		// compareDesc : minDate > date => -1
+		if (minDate === undefined) return;
+		if (compareDesc(minDate, date) < 0) {
+			date = setYearMonthDate(date, minDate!);
+			onChangeDate(date);
+		}
+	}
+	initDate();
 	return (
 		<LocalizationProvider dateAdapter={AdapterDateFns}>
 			<DatePicker
 				// label="날짜"
 				value={date}
 				minDate={minDate}
-				onChange={onChangeDate}
+				onChange={handleChangeDate}
 				renderInput={(params) => (
 					<TextField
 						{...params}
@@ -44,8 +60,8 @@ function DateAndTimePicker({
 			></DatePicker>
 			<TimePicker
 				// label="시각"
-				value={time}
-				onChange={onChangeTime}
+				value={date}
+				onChange={handleChangeTime}
 				// minutesStep={10}
 				disableMaskedInput={true}
 				renderInput={(params) => (
