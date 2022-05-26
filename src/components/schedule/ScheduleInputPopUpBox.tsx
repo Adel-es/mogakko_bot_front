@@ -3,15 +3,8 @@ import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
 import ScheduleInputBox, { ScheduleInputProps } from "./ScheduleInputBox";
 import { useState } from "react";
 
-const defaultProps: ScheduleInputProps = {
-	title: "(제목 없음)",
-	startDate: new Date(),
-	endDate: new Date(),
-	content: "(내용 없음)",
-};
-
 function ScheduleInputPopUpBox({
-	defaultContent,
+	defaultContent: defaultSchedule,
 	open,
 	onClose,
 	onSave,
@@ -25,10 +18,35 @@ function ScheduleInputPopUpBox({
 	onModify?: (...props: any | null) => {};
 	onDelete?: (...props: any | null) => {};
 }) {
-	const [title, setTitle] = useState<string>(defaultContent.title!);
-	const [startDate, setStartDate] = useState<Date>(defaultContent.startDate);
-	const [endDate, setEndDate] = useState<Date>(defaultContent.endDate);
-	const [content, setContent] = useState<string>(defaultContent.content!);
+	const defaultTitle = "(제목 없음)";
+	const defaultContent = "(내용 없음)";
+	const [title, setTitle] = useState<string>(
+		defaultSchedule.title !== undefined ? defaultSchedule.title : defaultTitle
+	);
+	const [startDate, setStartDate] = useState<Date>(defaultSchedule.startDate);
+	const [endDate, setEndDate] = useState<Date>(defaultSchedule.endDate);
+	const [content, setContent] = useState<string>(
+		defaultSchedule.content !== undefined
+			? defaultSchedule.content
+			: defaultContent
+	);
+
+	const handleSave = () => {
+		if (onSave === undefined)
+			console.error("onSave() is undefined but need to function.");
+
+		const newSchedule: Schedule = {
+			id: 1,
+			name: "test name", // FIXME: 사용자 닉네임 가져오기
+			start: startDate,
+			end: endDate,
+			title: title === "" ? defaultTitle : title,
+			content: content === "" ? defaultContent : content,
+		};
+		// console.log(newSchedule);
+		onSave!(newSchedule);
+		onClose();
+	};
 
 	return (
 		<Dialog
@@ -48,14 +66,12 @@ function ScheduleInputPopUpBox({
 			></ScheduleInputBox>
 			<DialogActions>
 				<Button onClick={onClose}>취소</Button>
-				{onSave !== undefined && <Button>저장</Button>}
+				{onSave !== undefined && <Button onClick={handleSave}>저장</Button>}
 				{onModify !== undefined && <Button>수정</Button>}
 				{onDelete !== undefined && <Button>삭제</Button>}
 			</DialogActions>
 		</Dialog>
 	);
 }
-
-ScheduleInputPopUpBox.defaultProps = { defaultContent: defaultProps };
 
 export default ScheduleInputPopUpBox;
