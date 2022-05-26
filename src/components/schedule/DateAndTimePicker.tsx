@@ -7,9 +7,9 @@ import {
 } from "@mui/x-date-pickers";
 
 interface DateAndTimePickerProp {
-	date: Date | null;
-	time: Date | null;
-	minDate: Date | null;
+	date: Date;
+	time: Date;
+	minDate?: Date | undefined;
 	onChangeDate: any;
 	onChangeTime: any;
 }

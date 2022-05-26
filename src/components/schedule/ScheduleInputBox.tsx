@@ -23,14 +23,10 @@ function ScheduleInputBox({
 	defaultContent: ScheduleInputProps;
 }) {
 	const [title, setTitle] = useState(defaultContent.title);
-	const [startDate, setStartDate] = useState<Date | null>(
-		defaultContent.startDate
-	);
-	const [startTime, setStartTime] = useState<Date | null>(
-		defaultContent.startDate
-	);
-	const [endDate, setEndDate] = useState<Date | null>(defaultContent.endDate);
-	const [endTime, setEndTime] = useState<Date | null>(defaultContent.endDate);
+	const [startDate, setStartDate] = useState<Date>(defaultContent.startDate);
+	const [startTime, setStartTime] = useState<Date>(defaultContent.startDate);
+	const [endDate, setEndDate] = useState<Date>(defaultContent.endDate);
+	const [endTime, setEndTime] = useState<Date>(defaultContent.endDate);
 	const [content, setContent] = useState(defaultContent.content);
 
 	const handleChange = (date: Date) => {
@@ -54,7 +50,7 @@ function ScheduleInputBox({
 				<DateAndTimePicker
 					date={startDate}
 					time={startTime}
-					minDate={new Date()}
+					// minDate={new Date()}
 					onChangeDate={setStartDate}
 					onChangeTime={setStartTime}
 				></DateAndTimePicker>
