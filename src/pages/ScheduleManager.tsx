@@ -3,7 +3,7 @@ import {
 	samplePeopleInfo,
 } from "../utils/schedule/ScheduleInfoStruct";
 import { differenceInCalendarDays, addDays } from "date-fns";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { GenerateCalendarOfCurrentMonth } from "../utils/calendar/MonthListGenerator";
 import { EachDateType } from "../utils/calendar/MonthListGenerator";
 import MonthlyCalendar from "../components/calendar/MonthlyCalendar";
@@ -54,82 +54,72 @@ export interface ScheduleEvent {
 		content: string;
 	};
 }
-function getSchedulesOnSelectedDay(
-	selectedDay: Date,
-	calendarOfCurrentMonth: Map<string, EachDateType>,
-	schedulesOfCurrentMonth: Map<number, Schedule>
-): Array<ScheduleEvent> {
-	/**
-	 * @returns : 특정 날짜에 속하는 일정 리스트 (big-calendar의 event 형식)
-	 */
-	if (!calendarOfCurrentMonth.has(selectedDay.toDateString())) return [];
-	// console.log("in func:", selectedDay);
-	const idsOfSelectedDay = Array.from(
-		calendarOfCurrentMonth.get(selectedDay.toDateString())!.schedules
-	);
-	const schedulesOfSelectedDay = idsOfSelectedDay.map((id) => {
-		const schedule = schedulesOfCurrentMonth.get(id)!;
-		return {
-			name: schedule.name,
-			start: schedule.start,
-			end: schedule.end,
-			resource: { title: schedule.title, content: schedule.content },
-		};
-	});
+// function getSchedulesOnSelectedDay(
+// 	selectedDay: Date,
+// 	calendarOfCurrentMonth: Map<string, EachDateType>,
+// 	schedulesOfCurrentMonth: Map<number, Schedule>
+// ): Array<ScheduleEvent> {
+// 	/**
+// 	 * @returns : 특정 날짜에 속하는 일정 리스트 (big-calendar의 event 형식)
+// 	 */
+// 	if (!calendarOfCurrentMonth.has(selectedDay.toDateString())) return [];
+// 	// console.log("in func:", selectedDay);
+// 	const idsOfSelectedDay = Array.from(
+// 		calendarOfCurrentMonth.get(selectedDay.toDateString())!.schedules
+// 	);
+// 	const schedulesOfSelectedDay = idsOfSelectedDay.map((id) => {
+// 		const schedule = schedulesOfCurrentMonth.get(id)!;
+// 		return {
+// 			name: schedule.name,
+// 			start: schedule.start,
+// 			end: schedule.end,
+// 			resource: { title: schedule.title, content: schedule.content },
+// 		};
+// 	});
 
-	return schedulesOfSelectedDay;
-}
+// 	return schedulesOfSelectedDay;
+// }
 
 function StudyManager() {
 	const [startDateOnCalendar, setStartDateOnCalendar] = useState(new Date());
-	// const [dayClicked, setDayClicked] = useState(false);
-	// const [dayDoubleClicked, setDayDoubleClicked] = useState(false);
-	const [selectedDay, setSelectedDay] = useState(new Date());
 	const [schedulesOfCurrentMonth, setSchedulesOfCurrentMonth] = useState(
 		new Map(samplePeopleInfo.map((personInfo) => [personInfo.id, personInfo]))
 	);
+	// FIXME: temp code
+	const tempId = useRef<number>(schedulesOfCurrentMonth.size);
 
 	/**
 	 * calendarOfCurrentMonth 에는 각 day에 schedule의 id를 Set()으로 저장,
 	 * schedulesOfCurrentMonth 에는 schedule을 Map(id, {schedule 정보})에 저장.
 	 */
-	let calendarOfCurrentMonth = mergeCalendarWithSchedules(
+	const calendarOfCurrentMonth = mergeCalendarWithSchedules(
 		GenerateCalendarOfCurrentMonth(startDateOnCalendar),
 		schedulesOfCurrentMonth
 	);
 
-	// let schedulesOfSelectedDay = getSchedulesOnSelectedDay(
-	// 	selectedDay,
-	// 	calendarOfCurrentMonth,
-	// 	schedulesOfCurrentMonth
-	// );
-
-	// function addSchedule(schedule: Schedule);
-
-	// const handleCloseSchedulePopupBox = () => {
-	// 	setDayClicked(false);
-	// };
-
-	// const handleActiveStartDateChangeOnMonthlyCalendar = (prop: {
-	// 	startDate: Date;
-	// }) => {
-	// 	setStartDateOnCalendar(prop.startDate);
-	// };
-
-	// TODO: create가 안됨.
 	const handleCreateSchedule = (personInfo: Schedule) => {
 		// FIXME: temp code
-		const tempId = schedulesOfCurrentMonth.size + 1;
-		personInfo["id"] = tempId;
+		tempId.current += 1;
+		personInfo.id = tempId.current;
 		console.log(personInfo);
 
-		calendarOfCurrentMonth = mergeCalendarWithSchedule(
-			calendarOfCurrentMonth,
-			personInfo
-		);
 		setSchedulesOfCurrentMonth((prev) =>
-			new Map(prev).set(personInfo["id"], personInfo)
+			new Map(prev).set(personInfo.id, personInfo)
 		);
+	};
+
+	const handleUpdateSchedule = (schedule: Schedule) => {
+		setSchedulesOfCurrentMonth((prev) =>
+			new Map(prev).set(schedule.id, schedule)
+		);
+	};
+
+	const handleDeleteSchedule = (schedule: Schedule) => {
+		setSchedulesOfCurrentMonth((prev) => {
+			const newMap = new Map(prev);
+			newMap.delete(schedule.id);
+			return newMap;
+		});
 	};
 
 	return (
@@ -138,6 +128,8 @@ function StudyManager() {
 				calendarOfCurrentMonth={calendarOfCurrentMonth}
 				schedulesOfCurrentMonth={schedulesOfCurrentMonth}
 				onCreateSchedule={handleCreateSchedule}
+				onUpdateSchedule={handleUpdateSchedule}
+				onDeleteSchedule={handleDeleteSchedule}
 			></MonthlyCalendar>
 		</div>
 	);

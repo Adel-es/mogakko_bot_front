@@ -1,24 +1,24 @@
 import { Dialog, DialogActions, Button } from "@mui/material";
 import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
-import ScheduleInputBox, { ScheduleInputProps } from "./ScheduleInputBox";
-import { useState } from "react";
+import ScheduleInputBox from "./ScheduleInputBox";
+import { useState, useEffect } from "react";
 
 function ScheduleInputPopUpBox({
 	defaultSchedule,
 	open,
-	readonly = false,
+	readonly,
 	onClose,
 	onSave,
-	onModify,
+	onUpdate,
 	onDelete,
 }: {
-	defaultSchedule: ScheduleInputProps;
+	defaultSchedule: Schedule;
 	open: boolean;
-	readonly?: boolean;
+	readonly: boolean;
 	onClose: () => void;
-	onSave?: (personInfo: Schedule) => void;
-	onModify?: (...props: any | null) => {};
-	onDelete?: (...props: any | null) => {};
+	onSave: (personInfo: Schedule) => void;
+	onUpdate: (personInfo: Schedule) => void;
+	onDelete: (personInfo: Schedule) => void;
 }) {
 	const defaultTitle = "";
 	const defaultContent = "";
@@ -26,28 +26,53 @@ function ScheduleInputPopUpBox({
 	const [title, setTitle] = useState<string>(
 		defaultSchedule.title !== undefined ? defaultSchedule.title : defaultTitle
 	);
-	const [startDate, setStartDate] = useState<Date>(defaultSchedule.startDate);
-	const [endDate, setEndDate] = useState<Date>(defaultSchedule.endDate);
+	const [startDate, setStartDate] = useState<Date>(defaultSchedule.start);
+	const [endDate, setEndDate] = useState<Date>(defaultSchedule.end);
 	const [content, setContent] = useState<string>(
 		defaultSchedule.content !== undefined
 			? defaultSchedule.content
 			: defaultContent
 	);
+	const [isReadOnly, setIsReadOnly] = useState<boolean>(readonly);
+
+	useEffect(() => {
+		setIsReadOnly(readonly);
+	}, [readonly]);
+
+	const handleClickUpdateButton = () => {
+		setIsReadOnly(false);
+	};
 
 	const handleSave = () => {
-		if (onSave === undefined)
-			console.error("onSave() is undefined but need to function.");
-
 		const newSchedule: Schedule = {
-			id: 1,
-			name: "test name", // FIXME: 사용자 닉네임 가져오기
+			id: defaultSchedule.id,
+			name: defaultSchedule.name,
 			start: startDate,
 			end: endDate,
 			title: title === "" ? defaultTitle : title,
 			content: content === "" ? defaultContent : content,
 		};
-		// console.log(newSchedule);
-		onSave!(newSchedule);
+
+		onSave(newSchedule);
+		onClose();
+	};
+
+	const handleUpdate = () => {
+		const newSchedule: Schedule = {
+			id: defaultSchedule.id,
+			name: defaultSchedule.name,
+			start: startDate,
+			end: endDate,
+			title: title === "" ? defaultTitle : title,
+			content: content === "" ? defaultContent : content,
+		};
+		onUpdate(newSchedule);
+		// onClose();
+		setIsReadOnly(true);
+	};
+
+	const handleDelete = () => {
+		onDelete(defaultSchedule);
 		onClose();
 	};
 
@@ -66,13 +91,19 @@ function ScheduleInputPopUpBox({
 				startDate={{ value: startDate, setValue: setStartDate }}
 				endDate={{ value: endDate, setValue: setEndDate }}
 				content={{ value: content, setValue: setContent }}
-				readonly={readonly}
+				readonly={isReadOnly}
 			></ScheduleInputBox>
 			<DialogActions>
-				<Button onClick={onClose}>취소</Button>
-				{onSave !== undefined && <Button onClick={handleSave}>저장</Button>}
-				{onModify !== undefined && <Button>수정</Button>}
-				{onDelete !== undefined && <Button>삭제</Button>}
+				{isReadOnly && <Button onClick={handleClickUpdateButton}>수정</Button>}
+				{isReadOnly && <Button onClick={handleDelete}>삭제</Button>}
+				{!isReadOnly && (
+					<Button
+						onClick={defaultSchedule.id === 0 ? handleSave : handleUpdate}
+					>
+						저장
+					</Button>
+				)}
+				<Button onClick={onClose}>{isReadOnly ? "닫기" : "취소"}</Button>
 			</DialogActions>
 		</Dialog>
 	);

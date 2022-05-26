@@ -11,12 +11,6 @@ const CustomTextField = styled(TextField)(() => ({
 	},
 }));
 
-export interface ScheduleInputProps {
-	title?: string;
-	startDate: Date;
-	endDate: Date;
-	content?: string;
-}
 function ScheduleInputBox({
 	title,
 	startDate,

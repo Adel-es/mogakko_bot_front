@@ -6,7 +6,6 @@ import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
 import { EachDateType } from "../../utils/calendar/MonthListGenerator";
 import { useState, useCallback, useRef } from "react";
 import ScheduleInputPopUpBox from "../schedule/ScheduleInputPopUpBox";
-import { ScheduleInputProps } from "../schedule/ScheduleInputBox";
 
 const locales = {
 	"en-US": enUS,
@@ -23,36 +22,44 @@ const localizer = dateFnsLocalizer({
 interface MonthlyCalendarProp {
 	calendarOfCurrentMonth: Map<string, EachDateType>;
 	schedulesOfCurrentMonth: Map<number, Schedule>;
-	onCreateSchedule: any;
+	onCreateSchedule: (schedule: Schedule) => void;
+	onUpdateSchedule: (schedule: Schedule) => void;
+	onDeleteSchedule: (schedule: Schedule) => void;
+}
+function getDefaultSchedule(): Schedule {
+	return {
+		id: 0,
+		title: "",
+		name: "test name", // FIXME: 이름 가져오기
+		start: new Date(),
+		end: new Date(),
+		content: "",
+	};
 }
 function MonthlyCalendar({
 	calendarOfCurrentMonth,
 	schedulesOfCurrentMonth,
 	onCreateSchedule,
+	onUpdateSchedule,
+	onDeleteSchedule,
 }: MonthlyCalendarProp) {
 	const [isSelectSlot, setIsSelectSlot] = useState<boolean>(false);
 	const [isSelectEvent, setIsSelectEvent] = useState<boolean>(false);
-	const defaultPropForScheduleBox = useRef<ScheduleInputProps>({
-		startDate: new Date(),
-		endDate: new Date(),
-	});
+	const defaultPropForScheduleBox = useRef<Schedule>(getDefaultSchedule());
 
 	const handleSelectSlot = useCallback((slotInfo: any) => {
 		const date = slotInfo.slots[0];
-		defaultPropForScheduleBox.current = { startDate: date, endDate: date };
+		defaultPropForScheduleBox.current = getDefaultSchedule();
+		defaultPropForScheduleBox.current.start = date;
+		defaultPropForScheduleBox.current.end = date;
 		setIsSelectSlot(true);
 	}, []);
 
 	const handleSelectEvent = useCallback((event: Schedule) => {
-		defaultPropForScheduleBox.current = {
-			title: event.title,
-			startDate: event.start,
-			endDate: event.end,
-			content: event.content,
-		};
+		defaultPropForScheduleBox.current = event;
 		setIsSelectEvent(true);
 
-		console.log(event);
+		// console.log(event);
 	}, []);
 
 	const handleCloseSchedulePopupBox = () => {
@@ -79,8 +86,11 @@ function MonthlyCalendar({
 				<ScheduleInputPopUpBox
 					defaultSchedule={defaultPropForScheduleBox.current}
 					open={isSelectSlot}
+					readonly={false}
 					onClose={handleCloseSchedulePopupBox}
 					onSave={onCreateSchedule}
+					onUpdate={onUpdateSchedule}
+					onDelete={onDeleteSchedule}
 				></ScheduleInputPopUpBox>
 			)}
 			{isSelectEvent && (
@@ -89,6 +99,9 @@ function MonthlyCalendar({
 					open={isSelectEvent}
 					readonly={true}
 					onClose={handleCloseSchedulePopupBox}
+					onSave={onCreateSchedule}
+					onUpdate={onUpdateSchedule}
+					onDelete={onDeleteSchedule}
 				></ScheduleInputPopUpBox>
 			)}
 		</>
