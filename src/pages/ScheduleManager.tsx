@@ -1,11 +1,6 @@
-import {
-	Schedule,
-	samplePeopleInfo,
-} from "../utils/schedule/ScheduleInfoStruct";
-import { differenceInCalendarDays, addDays } from "date-fns";
+import { samplePeopleInfo } from "../utils/schedule/ScheduleInfoStruct";
+import { Schedule } from "../type/CommonInterfaces";
 import { useState, useRef } from "react";
-import { GenerateCalendarOfCurrentMonth } from "../utils/calendar/MonthListGenerator";
-import { EachDateType } from "../utils/calendar/MonthListGenerator";
 import MonthlyCalendar from "../components/calendar/MonthlyCalendar";
 
 function mergeCalendarWithSchedule(

@@ -2,8 +2,7 @@ import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
-import { EachDateType } from "../../utils/calendar/MonthListGenerator";
+import { Schedule } from "../../type/CommonInterfaces";
 import { useState, useCallback, useRef } from "react";
 import ScheduleInputPopUpBox from "../schedule/ScheduleInputPopUpBox";
 
@@ -20,7 +19,6 @@ const localizer = dateFnsLocalizer({
 });
 
 interface MonthlyCalendarProp {
-	calendarOfCurrentMonth: Map<string, EachDateType>;
 	schedulesOfCurrentMonth: Map<number, Schedule>;
 	onCreateSchedule: (schedule: Schedule) => void;
 	onUpdateSchedule: (schedule: Schedule) => void;
@@ -37,7 +35,6 @@ function getDefaultSchedule(): Schedule {
 	};
 }
 function MonthlyCalendar({
-	calendarOfCurrentMonth,
 	schedulesOfCurrentMonth,
 	onCreateSchedule,
 	onUpdateSchedule,

@@ -1,14 +1,9 @@
 //TODO: class 로 변경하기
 // TODO: typescript 적용하기
 //  name: string, startTime: Date(), endTime: Date()
-interface Schedule {
-	id: number;
-	name: string;
-	start: Date;
-	end: Date;
-	title: string;
-	content: string;
-}
+
+import { Schedule } from "../../type/CommonInterfaces";
+
 function ScheduleInfoStruct(
 	id: number,
 	name: string,
@@ -27,7 +22,7 @@ function ScheduleInfoStruct(
 	};
 }
 
-const samplePeopleInfo = [
+export const samplePeopleInfo = [
 	ScheduleInfoStruct(
 		1,
 		"정채ㅜ언",
@@ -101,5 +96,3 @@ const samplePeopleInfo = [
 		"test description"
 	),
 ];
-
-export { Schedule, ScheduleInfoStruct, samplePeopleInfo };

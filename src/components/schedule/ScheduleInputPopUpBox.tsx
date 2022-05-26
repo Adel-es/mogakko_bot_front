@@ -1,5 +1,5 @@
 import { Dialog, DialogActions, Button } from "@mui/material";
-import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
+import { Schedule } from "../../type/CommonInterfaces";
 import ScheduleInputBox from "./ScheduleInputBox";
 import { useState, useEffect } from "react";
 

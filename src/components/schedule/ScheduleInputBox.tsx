@@ -1,8 +1,8 @@
 import TextField from "@mui/material/TextField";
 import { List, ListItem, ListItemText } from "@mui/material";
 import DateAndTimePicker from "./DateAndTimePicker";
-import { Schedule } from "../../utils/schedule/ScheduleInfoStruct";
 import { styled } from "@mui/material/styles";
+import { Schedule } from "../../type/CommonInterfaces";
 
 const CustomTextField = styled(TextField)(() => ({
 	/** disable 시, 글자 색상 설정 */
