@@ -49,6 +49,7 @@ function MonthlyCalendar({
 			events={Array.from(schedulesOfCurrentMonth.values())}
 			titleAccessor={"name"}
 			onSelectSlot={onSelectSlot}
+			views={["month", "day", "agenda"]}
 		></Calendar>
 	);
 }
