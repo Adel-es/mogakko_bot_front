@@ -111,6 +111,14 @@ function ScheduleCalendar({
     setIsSelectEvent(false);
   };
 
+  const handleNavigate = (date: Date, view: View) => {
+    // console.log("navigate: ", date.toDateString());
+    // console.log(getStartAndEndDate(date, view));
+    const { start, end } = getStartAndEndDate(date, view);
+    setStartDay(start!);
+    setEndDay(end!);
+  };
+
   return (
     <>
       <Calendar
@@ -123,6 +131,7 @@ function ScheduleCalendar({
         selectable
         onSelectSlot={handleSelectSlot}
         onSelectEvent={handleSelectEvent}
+        onNavigate={handleNavigate}
         views={["month", "day", "agenda"]}
         popup
       ></Calendar>
