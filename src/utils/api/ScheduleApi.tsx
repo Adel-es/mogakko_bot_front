@@ -14,6 +14,29 @@ function convertDateToUriFormat(date: Date) {
 export async function getSchedulesByDuration(
   url: string,
   start: Date,
+  end: Date
+) {
+  const queries =
+    "start=" +
+    convertDateToUriFormat(start) +
+    "&end=" +
+    convertDateToUriFormat(end);
+  const requestAPI = url + "/schedules?" + queries;
+  const response = await fetch(requestAPI).then((response) => response.json());
+  // console.log(schedules);
+  return response;
+}
+
+export async function getSchedulesById(url: string, id: number) {
+  const pathParameters = id.toString();
+  const requestAPI = url + "/schedules/" + pathParameters;
+  const response = await fetch(requestAPI).then((response) => response.json());
+  return response;
+}
+
+export async function getSchedulesByDurationAndId(
+  url: string,
+  start: Date,
   end: Date,
   userId: number
 ) {
@@ -27,13 +50,6 @@ export async function getSchedulesByDuration(
   const requestAPI = url + "/schedules?" + queries;
   const response = await fetch(requestAPI).then((response) => response.json());
   // console.log(schedules);
-  return response;
-}
-
-export async function getSchedulesById(url: string, id: number) {
-  const pathParameters = id.toString();
-  const requestAPI = url + "/schedules/" + pathParameters;
-  const response = await fetch(requestAPI).then((response) => response.json());
   return response;
 }
 
