@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Button, Grid, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 function SignIn() {
   const [discordID, setDiscordID] = useState("");
@@ -22,32 +23,40 @@ function SignIn() {
       navigate("/schedule");
     }
   }, [signIn]);
-  function ChangeForm() {
     return (
-      <div>
-        <div>
-          <input
+		<Grid
+			container
+			alignItems="center"
+			justifyContent={"center"}
+			direction="column"
+			spacing={2}
+		>
+			<Grid item>
+				<TextField
+					label="아이디"
+					variant="outlined"
             value={discordID}
-            placeholder="디스코드 ID"
             onChange={onChangeID}
-          ></input>
-          <input
+				></TextField>
+			</Grid>
+			<Grid item>
+				<TextField
+					label="비밀번호"
+					variant="outlined"
+					type="password"
             value={password}
-            placeholder="비밀번호"
             onChange={onChangePassword}
-          ></input>
-          <button onClick={onClickSignIn}>로그인</button>
-        </div>
-        <Link to="/signup">
-          <div>처음 방문하셨다면 회원가입을 해주세요</div>
-        </Link>
-      </div>
-    );
-  }
-  return (
-    <div>
-      <ChangeForm></ChangeForm>
-    </div>
+				></TextField>
+			</Grid>
+			<Grid item>
+				<Button variant="outlined" onClick={onClickSignIn}>
+					로그인
+				</Button>
+			</Grid>
+			<Grid item>
+				<Link to="/signup">처음 방문하셨다면 회원가입을 해주세요</Link>
+			</Grid>
+		</Grid>
   );
 }
 export default SignIn;
