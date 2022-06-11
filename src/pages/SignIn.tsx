@@ -1,4 +1,4 @@
-import { Button, Grid, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Context } from "..";
@@ -33,39 +33,50 @@ function SignIn() {
 		}
 	}, [signIn]);
 	return (
-		<Grid
-			container
-			alignItems="center"
-			justifyContent={"center"}
-			direction="column"
-			spacing={2}
+		<Box
+			display="flex"
+			justifyContent="center" // 가로 정렬
+			minHeight="90vh"
+			maxHeight="100vh"
 		>
-			<Grid item>
-				<TextField
-					label="아이디"
-					variant="outlined"
-					value={discordID}
-					onChange={onChangeID}
-				></TextField>
+			<Grid
+				container
+				spacing={2}
+				direction="column"
+				justifyContent={"center"}
+				maxWidth="400px"
+			>
+				<Grid item>
+					<TextField
+						label="아이디"
+						variant="outlined"
+						value={discordID}
+						onChange={onChangeID}
+						fullWidth
+					></TextField>
+				</Grid>
+				<Grid item>
+					<TextField
+						label="비밀번호"
+						variant="outlined"
+						type="password"
+						value={password}
+						onChange={onChangePassword}
+						fullWidth
+					></TextField>
+				</Grid>
+				<Grid item>
+					<Button variant="outlined" onClick={onClickSignIn} fullWidth>
+						로그인
+					</Button>
+				</Grid>
+				<Grid item>
+					<Button component={Link} to="/signup" variant="contained" fullWidth>
+						처음 방문하셨다면 회원가입을 해주세요
+					</Button>
+				</Grid>
 			</Grid>
-			<Grid item>
-				<TextField
-					label="비밀번호"
-					variant="outlined"
-					type="password"
-					value={password}
-					onChange={onChangePassword}
-				></TextField>
-			</Grid>
-			<Grid item>
-				<Button variant="outlined" onClick={onClickSignIn}>
-					로그인
-				</Button>
-			</Grid>
-			<Grid item>
-				<Link to="/signup">처음 방문하셨다면 회원가입을 해주세요</Link>
-			</Grid>
-		</Grid>
+		</Box>
 	);
 }
 export default SignIn;
