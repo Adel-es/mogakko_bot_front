@@ -9,15 +9,15 @@ function SignIn() {
 	const [signIn, setSignIn] = useState(false);
 	const { url } = useContext(Context);
 	const navigate = useNavigate();
-	const onChangeID = (event: any) => {
+	const handleChangeID = (event: any) => {
 		// console.log("(debugging) : " + event.target.value);
 		setDiscordID(event.target.value);
 	};
-	const onChangePassword = (event: any) => {
+	const handleChangePassword = (event: any) => {
 		// console.log("(debugging) : " + event.target.value);
 		setPassword(event.target.value);
 	};
-	const onClickSignIn = () => {
+	const handleClickSignIn = () => {
 		const response = logIn(url, discordID, password).then((response) => {
 			if (response.status === 200) setSignIn(true);
 			return response.status;
@@ -51,7 +51,7 @@ function SignIn() {
 						label="아이디"
 						variant="outlined"
 						value={discordID}
-						onChange={onChangeID}
+						onChange={handleChangeID}
 						fullWidth
 					></TextField>
 				</Grid>
@@ -61,12 +61,12 @@ function SignIn() {
 						variant="outlined"
 						type="password"
 						value={password}
-						onChange={onChangePassword}
+						onChange={handleChangePassword}
 						fullWidth
 					></TextField>
 				</Grid>
 				<Grid item>
-					<Button variant="outlined" onClick={onClickSignIn} fullWidth>
+					<Button variant="outlined" onClick={handleClickSignIn} fullWidth>
 						로그인
 					</Button>
 				</Grid>
