@@ -14,17 +14,23 @@ import {
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../static/icons/discord_icon_logo.svg";
 function Home() {
+	const tmpColor1 = "#7289da";
+	const tmpColor2 = "#23272a";
 	return (
 		<>
 			<CssBaseline />
 			<AppBar
 				position="static"
-				sx={{ flexGrow: 1, backgroundColor: alpha("#000000", 0.5) }}
+				sx={{
+					flexGrow: 1,
+					backgroundColor: alpha(tmpColor1, 1),
+					// color: tmpColor2,
+				}}
 			>
 				<Toolbar>
 					<Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
 						<SvgIcon>
-							<Logo />
+							<Logo color="white" />
 						</SvgIcon>
 					</Box>
 					<Button
@@ -54,13 +60,16 @@ function Home() {
 			>
 				<Typography
 					component="h1"
-					variant="h2"
+					variant="h3"
 					align="center"
-					color="text.primary"
-					// gutterBottom
+					color={tmpColor1}
+					gutterBottom
 				>
-					모각코
+					Hello, World!
 				</Typography>
+				<Box component="div" textAlign={"center"}>
+					<img src={require("../static/images/discord-img.gif")}></img>
+				</Box>
 			</Container>
 		</>
 	);
