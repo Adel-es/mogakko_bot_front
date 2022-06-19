@@ -5,7 +5,7 @@ export async function checkUserIdDuplication(url: string, userId: string) {
 	return response;
 }
 
-export async function getVerificationCode(url: string, discordId: string) {
+export async function requestVerificationCode(url: string, discordId: string) {
 	const parameters = discordId;
 	const requestAPI = url + "/users/new/discord-id-verification/" + parameters;
 	const response = await fetch(requestAPI);
@@ -15,7 +15,7 @@ export async function getVerificationCode(url: string, discordId: string) {
 export async function submitVerificationCode(url: string, verifyCode: string) {
 	const parameters = verifyCode;
 	const requestAPI =
-		url + "/users/new/discord-id-verfication-code/" + parameters; // FIXME: 나중에 오타 수정
+		url + "/users/new/discord-id-verification-code/" + parameters; // FIXME: 나중에 오타 수정
 	const response = await fetch(requestAPI);
 	return response;
 }

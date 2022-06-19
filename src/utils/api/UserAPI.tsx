@@ -36,7 +36,7 @@ export async function updateUserProfile(
 		pw: pw,
 		profile_memo: profileMemo,
 	});
-	body.replace("profile_memo", "profile-memo");
+	body.replace("profile_memo", "profile-memo"); // TODO: -> profile-memo => memo
 	const requestAPI = url + "/users/" + parameters;
 	const response = await fetch(requestAPI, {
 		method: "PATCH",

@@ -22,7 +22,7 @@ import {
 } from "../../utils/api/UserAPI";
 import {
 	checkUserIdDuplication,
-	getVerificationCode,
+	requestVerificationCode,
 	submitVerificationCode,
 } from "../../utils/api/SignUpAPI";
 import {
