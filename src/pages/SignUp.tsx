@@ -1,38 +1,94 @@
 import { Button, Grid, TextField, Box, createTheme } from "@mui/material";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { Context } from "..";
+import {
+	checkUserIdDuplication,
+	requestVerificationCode,
+	submitVerificationCode,
+} from "../utils/api/SignUpAPI";
+import { DiscordIDCertification } from "../components/signup/DiscordIDCertification";
+import { Registration } from "../components/signup/Registration";
+import { RegistrationComplete } from "../components/signup/RegistrationComplete";
+import { createUserProfile } from "../utils/api/UserAPI";
 
 const enum CertNumState {
 	NoCheck = 3,
 	WrongNum = 1,
 	CorrectNum = 2,
 }
-const enum ConfirmPasswordState {
+export const enum RequestCertNumState {
+	NoRequest = 0,
+	EmptyDiscordID = 1,
+	WrongDiscordID = 2,
+	SuccessToRequest = 10,
+}
+export const enum ConfirmPasswordState {
 	NoTyping = 0,
 	WrongPassword = 1,
 	CorrectPassword = 2,
 }
+export const enum UserIDState {
+	NoTyping = 0,
+	NoCheck = 1,
+	DuplicatedID = 2,
+	EnableID = 3,
+}
 function SignUp() {
 	const [discordID, setDiscordID] = useState("");
-	const [requestCertNum, setRequestCertNum] = useState(false);
+	const [requestCertNum, setRequestCertNum] = useState<RequestCertNumState>(
+		RequestCertNumState.NoRequest
+	); // => snackbar
 	const [certificationNum, setCertificationNum] = useState("");
-	const [isCorrectCertNum, setIsCorrectCertNum] = useState<CertNumState>(
-		CertNumState.NoCheck
+	const [certificationNumState, setCertificationNumState] =
+		useState<CertNumState>(CertNumState.NoCheck);
+
+	const [userID, setUserID] = useState(""); // ID 중복 체크 하기
+	const [userIDState, setUserIDState] = useState<UserIDState>(
+		UserIDState.NoTyping
 	);
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [confirmPasswordState, setConfirmPasswordState] =
 		useState<ConfirmPasswordState>(ConfirmPasswordState.NoTyping);
 	const [register, setRegister] = useState(false);
+	const { url } = useContext(Context);
 
 	const handleChangeDiscordID = (event: any) => {
 		setDiscordID(event.target.value);
 	};
-	const handleClickCorrectID = () => {
-		setRequestCertNum(true);
+	const handleClickRequestCertNum = () => {
+		if (discordID === "") {
+			// TODO: discordID textfield가 error로 표시되도록 하기
+			setRequestCertNum(RequestCertNumState.EmptyDiscordID);
+			return;
+		}
+
+		requestVerificationCode(url, discordID).then((response) => {
+			if (response.status === 200) {
+				console.log("인증번호 전송됨");
+				setRequestCertNum(RequestCertNumState.SuccessToRequest);
+			} else {
+				setRequestCertNum(RequestCertNumState.WrongDiscordID);
+			}
+		});
 	};
 	const handleChangeCertNum = (event: any) => {
 		setCertificationNum(event.target.value);
+	};
+	const handleChangeUserID = (event: any) => {
+		setUserID(event.target.value);
+		setUserIDState(UserIDState.NoCheck);
+	};
+	const handleCheckUserIDDuplication = () => {
+		checkUserIdDuplication(url, userID).then((response) => {
+			if (response.status === 200) {
+				console.log("사용가능한 아이디");
+				setUserIDState(UserIDState.EnableID);
+			} else {
+				console.log("중복된 아이디");
+				setUserIDState(UserIDState.DuplicatedID);
+			}
+		});
 	};
 	const handleChangePassword = (event: any) => {
 		setPassword(event.target.value);
@@ -52,17 +108,49 @@ function SignUp() {
 			setConfirmPasswordState(ConfirmPasswordState.WrongPassword);
 		}
 	};
-	const handlelickRegister = () => {
-		// TODO: 회원 가입 버튼 눌렀을 때 넘어가는 조건 작성
-		// setIsCorrectCertNum(true);
-		if (true) {
-			// api 호출
-			setIsCorrectCertNum(CertNumState.CorrectNum);
-		} else {
-			setIsCorrectCertNum(CertNumState.WrongNum);
+	const handleCheckCertNum = () => {
+		if (requestCertNum !== RequestCertNumState.SuccessToRequest) {
+			console.log("인증번호가 발급되지 않았습니다.");
+			return;
 		}
-		if (confirmPasswordState === ConfirmPasswordState.CorrectPassword)
-			setRegister(true);
+		if (certificationNum === "") {
+			console.log("인증번호를 입력해주십시오.");
+			return;
+		}
+		submitVerificationCode(url, certificationNum).then((response) => {
+			if (response.status === 200) {
+				console.log("인증번호 유효함");
+				setCertificationNumState(CertNumState.CorrectNum);
+			} else {
+				console.log("인증번호 틀림");
+				setCertificationNumState(CertNumState.WrongNum);
+			}
+		});
+	};
+	const handleClickRegister = () => {
+		if (
+			userIDState === UserIDState.EnableID &&
+			confirmPasswordState === ConfirmPasswordState.CorrectPassword
+		) {
+			createUserProfile(url, userID, password, discordID).then((response) => {
+				if (response.status === 201) {
+					console.log("회원가입이 완료되었습니다.");
+					setRegister(true);
+				} else {
+					if (response.status === 400) {
+						console.log("아이디 혹은 비밀번호가 유효하지 않습니다.");
+					} else if (response.status === 409) {
+						console.log("이미 존재하는 회원입니다.");
+					}
+					console.log("회원가입이 실패하였습니다.", response.status);
+					setRegister(false);
+				}
+			});
+			// TODO: 회원가입하기
+		} else {
+			console.log("아이디 혹은 비밀번호가 유효하지 않습니다.");
+			setRegister(false);
+		}
 	};
 
 	return (
@@ -80,108 +168,36 @@ function SignUp() {
 					spacing={2}
 					maxWidth="400px"
 				>
-					<Grid
-						item
-						container
-						spacing={2}
-						alignItems="stretch" // 하위의 버튼 높이 stretch
-					>
-						<Grid item xs={12} sm={7}>
-							<TextField
-								value={discordID}
-								placeholder={"디스코드 ID"}
-								onChange={handleChangeDiscordID}
-								disabled={requestCertNum}
-								fullWidth
-							/>
-						</Grid>
-						<Grid item container xs={12} sm={5} alignItems="stretch">
-							<Button
-								variant="outlined"
-								onClick={handleClickCorrectID}
-								fullWidth
-							>
-								인증번호 받기
-							</Button>
-						</Grid>
-					</Grid>
-					<Grid item>
-						<TextField
-							value={certificationNum}
-							placeholder="인증번호"
-							onChange={handleChangeCertNum}
-							fullWidth
-						/>
-					</Grid>
-					<Grid item container spacing={2}>
-						<Grid item xs={12}>
-							<TextField
-								value={password}
-								placeholder="비밀번호"
-								onChange={handleChangePassword}
-								type="password"
-								fullWidth
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								value={confirmPassword}
-								placeholder="비밀번호 확인"
-								onChange={handleChangeConfirmPassword}
-								type="password"
-								error={
-									confirmPasswordState === ConfirmPasswordState.WrongPassword
-								}
-								color={
-									confirmPasswordState === ConfirmPasswordState.CorrectPassword
-										? "success"
-										: "primary"
-								}
-								helperText={
-									confirmPasswordState === ConfirmPasswordState.WrongPassword
-										? "비밀번호가 일치하지 않습니다."
-										: ""
-								}
-								fullWidth
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<Button
-								variant="contained"
-								onClick={handlelickRegister}
-								fullWidth
-							>
-								회원 가입
-							</Button>
-						</Grid>
-					</Grid>
+					{certificationNumState !== CertNumState.CorrectNum && (
+						<DiscordIDCertification
+							discordID={discordID}
+							certificationNum={certificationNum}
+							requestCertNum={requestCertNum}
+							handleCheckCertNum={handleCheckCertNum}
+							handleChangeDiscordID={handleChangeDiscordID}
+							handleClickRequestCertNum={handleClickRequestCertNum}
+							handleChangeCertNum={handleChangeCertNum}
+						></DiscordIDCertification>
+					)}
+					{certificationNumState === CertNumState.CorrectNum && (
+						<Registration
+							userID={userID}
+							userIDState={userIDState}
+							password={password}
+							confirmPassword={confirmPassword}
+							confirmPasswordState={confirmPasswordState}
+							handleChangeUserID={handleChangeUserID}
+							handleCheckUserIDDuplication={handleCheckUserIDDuplication}
+							handleChangePassword={handleChangePassword}
+							handleChangeConfirmPassword={handleChangeConfirmPassword}
+							handleClickRegister={handleClickRegister}
+						></Registration>
+					)}
 				</Grid>
 			)}
-			{requestCertNum &&
-				isCorrectCertNum &&
-				register && ( // 가입 완료되었으면 나타남
-					<Grid
-						container
-						direction="column"
-						spacing={10}
-						justifyContent="center"
-						alignContent={"center"}
-					>
-						<Grid item>
-							<Box style={{ fontSize: "20px" }}>회원가입을 완료하였습니다.</Box>
-						</Grid>
-						<Grid item>
-							<Button
-								fullWidth
-								variant="outlined"
-								component={Link}
-								to={"/signin"}
-							>
-								로그인 창으로 이동하기
-							</Button>
-						</Grid>
-					</Grid>
-				)}
+			{register && ( // 가입 완료되었으면 나타남
+				<RegistrationComplete />
+			)}
 		</Box>
 	);
 }
