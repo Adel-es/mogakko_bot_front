@@ -1,10 +1,19 @@
-import { Button, Grid, Snackbar, TextField } from "@mui/material";
-import { RequestCertNumState } from "../../pages/SignUp";
+import {
+	Alert,
+	AlertColor,
+	Button,
+	Grid,
+	Snackbar,
+	TextField,
+} from "@mui/material";
+import { useState } from "react";
+import { DiscordIDState } from "../../pages/SignUp";
 
 export function DiscordIDCertification({
 	discordID,
 	certificationNum,
 	requestCertNum,
+	handleSuccessToRequestCertNum,
 	handleCheckCertNum,
 	handleChangeDiscordID,
 	handleClickRequestCertNum,
@@ -12,47 +21,77 @@ export function DiscordIDCertification({
 }: {
 	discordID: string;
 	certificationNum: string;
-	requestCertNum: RequestCertNumState;
+	requestCertNum: DiscordIDState;
+	handleSuccessToRequestCertNum: any;
 	handleCheckCertNum: any;
 	handleChangeDiscordID: any;
 	handleClickRequestCertNum: any;
 	handleChangeCertNum: any;
 }) {
-	// const discordIDTextFieldSetting = (requestCertNum: RequestCertNumState) => {
-	// 	let discordIDTextField: { color: any; message: string } = {
-	// 		color: "primary",
-	// 		message: "",
-	// 	};
-	// 	switch (requestCertNum) {
-	// 		case RequestCertNumState.EmptyDiscordID: {
-	// 			discordIDTextField = {
-	// 				color: "warning",
-	// 				message: "ID를 입력해주십시오.",
-	// 			};
-	// 			break;
-	// 		}
-	// 		case RequestCertNumState.WrongDiscordID: {
-	// 			discordIDTextField = {
-	// 				color: "error",
-	// 				message: "ID가 존재하지 않습니다.",
-	// 			};
-	// 			break;
-	// 		}
-	// 		case RequestCertNumState.SuccessToRequest: {
-	// 			discordIDTextField = {
-	// 				color: "success",
-	// 				message: "인증번호가 발급되었습니다.",
-	// 			};
-	// 			break;
-	// 		}
-	// 		default: {
-	// 			discordIDTextField = { color: "primary", message: "" };
-	// 		}
-	// 	}
-	// 	return discordIDTextField;
-	// };
+	console.log(requestCertNum);
+	// const requestAlertContext: Map<RequestCertNumState, {severity: AlertColor, message:string}> =
+	// 	{
+	// 		(RequestCertNumState.EmptyDiscordID: { severity: "warning", message: "ID를 입력해주십시오." }),
+	// 		RequestCertNumState.WrongDiscordID: { severity: "error", message: "ID가 존재하지 않습니다." },
+	// 		RequestCertNumState.SuccessToRequest:{ severity: "success", message: "인증번호가 발급되었습니다." }
+	//   };
+	const requestAlertContext = (
+		requestCertNum: DiscordIDState
+	): { severity: AlertColor; message: string } => {
+		switch (requestCertNum) {
+			case DiscordIDState.EmptyDiscordID: {
+				return { severity: "warning", message: "ID를 입력해주십시오." };
+			}
+			case DiscordIDState.WrongDiscordID: {
+				return { severity: "error", message: "ID가 존재하지 않습니다." };
+			}
+			case DiscordIDState.SuccessToRequestCertNum: {
+				return { severity: "success", message: "인증번호가 발급되었습니다." };
+			}
+			default:
+				return { severity: "info", message: "" };
+		}
+	};
 	return (
 		<>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={requestCertNum === DiscordIDState.SuccessToRequestCertNum}
+				onClose={handleSuccessToRequestCertNum}
+				autoHideDuration={1000}
+			>
+				<Alert
+					severity={
+						requestAlertContext(DiscordIDState.SuccessToRequestCertNum).severity
+					}
+				>
+					{requestAlertContext(DiscordIDState.SuccessToRequestCertNum).message}
+				</Alert>
+			</Snackbar>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={requestCertNum === DiscordIDState.WrongDiscordID}
+				onClose={handleSuccessToRequestCertNum}
+				autoHideDuration={1000}
+			>
+				<Alert
+					severity={requestAlertContext(DiscordIDState.WrongDiscordID).severity}
+				>
+					{requestAlertContext(DiscordIDState.WrongDiscordID).message}
+				</Alert>
+			</Snackbar>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={requestCertNum === DiscordIDState.EmptyDiscordID}
+				onClose={handleSuccessToRequestCertNum}
+				autoHideDuration={1000}
+			>
+				<Alert
+					severity={requestAlertContext(DiscordIDState.EmptyDiscordID).severity}
+				>
+					{requestAlertContext(DiscordIDState.EmptyDiscordID).message}
+				</Alert>
+			</Snackbar>
 			<Grid
 				item
 				container
