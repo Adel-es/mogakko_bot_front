@@ -10,33 +10,44 @@ import { DiscordIDCertification } from "../components/signup/DiscordIDCertificat
 import { Registration } from "../components/signup/Registration";
 import { RegistrationComplete } from "../components/signup/RegistrationComplete";
 import { createUserProfile } from "../utils/api/UserAPI";
+import {
+	checkEnableUserIDPattern,
+	checkEnablePasswordPattern,
+} from "../utils/signup/SignUpUtils";
 
 const enum CertNumState {
-	NoCheck = 3,
-	WrongNum = 1,
-	CorrectNum = 2,
+	NoCheck = 1,
+	WrongNum = 2,
+	CorrectNum = 10,
 }
-export const enum RequestCertNumState {
-	NoRequest = 0,
+export const enum DiscordIDState {
+	NoRequestCertNum = 0,
 	EmptyDiscordID = 1,
 	WrongDiscordID = 2,
-	SuccessToRequest = 10,
+	SuccessToRequestCertNum = 10,
+}
+export const enum PasswordState {
+	NoTyping = 0,
+	NoCheck = 1,
+	MismatchPattern = 2,
+	EnablePassword = 10,
 }
 export const enum ConfirmPasswordState {
 	NoTyping = 0,
 	WrongPassword = 1,
-	CorrectPassword = 2,
+	CorrectPassword = 10,
 }
 export const enum UserIDState {
 	NoTyping = 0,
 	NoCheck = 1,
 	DuplicatedID = 2,
-	EnableID = 3,
+	MismatchPattern = 3,
+	EnableID = 10,
 }
 function SignUp() {
 	const [discordID, setDiscordID] = useState("");
-	const [requestCertNum, setRequestCertNum] = useState<RequestCertNumState>(
-		RequestCertNumState.NoRequest
+	const [requestCertNum, setRequestCertNum] = useState<DiscordIDState>(
+		DiscordIDState.NoRequestCertNum
 	); // => snackbar
 	const [certificationNum, setCertificationNum] = useState("");
 	const [certificationNumState, setCertificationNumState] =
@@ -47,6 +58,9 @@ function SignUp() {
 		UserIDState.NoTyping
 	);
 	const [password, setPassword] = useState("");
+	const [passwordState, setPasswordState] = useState<PasswordState>(
+		PasswordState.NoTyping
+	);
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [confirmPasswordState, setConfirmPasswordState] =
 		useState<ConfirmPasswordState>(ConfirmPasswordState.NoTyping);
@@ -59,18 +73,40 @@ function SignUp() {
 	const handleClickRequestCertNum = () => {
 		if (discordID === "") {
 			// TODO: discordID textfield가 error로 표시되도록 하기
-			setRequestCertNum(RequestCertNumState.EmptyDiscordID);
+			console.log("ID가 비어있습니다.");
+			setRequestCertNum(DiscordIDState.EmptyDiscordID);
+		} else {
+			requestVerificationCode(url, discordID).then((response) => {
+				if (response.status === 200) {
+					console.log("인증번호 전송됨");
+					setRequestCertNum(DiscordIDState.SuccessToRequestCertNum);
+				} else {
+					setRequestCertNum(DiscordIDState.WrongDiscordID);
+				}
+			});
+		}
+	};
+	const handleCheckCertNum = () => {
+		// if (requestCertNum !== RequestCertNumState.SuccessToRequest) {
+		// 	console.log("인증번호가 발급되지 않았습니다.");
+		// 	return;
+		// }
+		if (certificationNum === "") {
+			console.log("인증번호를 입력해주십시오.");
 			return;
 		}
-
-		requestVerificationCode(url, discordID).then((response) => {
+		submitVerificationCode(url, certificationNum).then((response) => {
 			if (response.status === 200) {
-				console.log("인증번호 전송됨");
-				setRequestCertNum(RequestCertNumState.SuccessToRequest);
+				console.log("인증번호 유효함");
+				setCertificationNumState(CertNumState.CorrectNum);
 			} else {
-				setRequestCertNum(RequestCertNumState.WrongDiscordID);
+				console.log("인증번호 틀림");
+				setCertificationNumState(CertNumState.WrongNum);
 			}
 		});
+	};
+	const handleSuccessToRequestCertNum = () => {
+		setRequestCertNum(DiscordIDState.NoRequestCertNum);
 	};
 	const handleChangeCertNum = (event: any) => {
 		setCertificationNum(event.target.value);
@@ -90,8 +126,12 @@ function SignUp() {
 			}
 		});
 	};
+	const handleSetUserIDStateNoCheck = () => {
+		setUserIDState(UserIDState.NoCheck);
+	};
 	const handleChangePassword = (event: any) => {
 		setPassword(event.target.value);
+		setPasswordState(PasswordState.NoCheck);
 		if (confirmPasswordState !== ConfirmPasswordState.NoTyping) {
 			if (event.target.value === confirmPassword) {
 				setConfirmPasswordState(ConfirmPasswordState.CorrectPassword);
@@ -108,26 +148,23 @@ function SignUp() {
 			setConfirmPasswordState(ConfirmPasswordState.WrongPassword);
 		}
 	};
-	const handleCheckCertNum = () => {
-		if (requestCertNum !== RequestCertNumState.SuccessToRequest) {
-			console.log("인증번호가 발급되지 않았습니다.");
-			return;
+	const checkEnableStringPattern = (userID: string, password: string) => {
+		if (checkEnableUserIDPattern(userID)) {
+			console.log("유효한 ID입니다.");
+		} else {
+			console.log("유효하지 않은 ID입니다. : ", userID);
+			setUserIDState(UserIDState.MismatchPattern);
 		}
-		if (certificationNum === "") {
-			console.log("인증번호를 입력해주십시오.");
-			return;
+		if (checkEnablePasswordPattern(password)) {
+			console.log("유효한 PW입니다. : ", password);
+			setPasswordState(PasswordState.EnablePassword);
+		} else {
+			console.log("유효하지 않은 PW입니다. : ", password);
+			setPasswordState(PasswordState.MismatchPattern);
 		}
-		submitVerificationCode(url, certificationNum).then((response) => {
-			if (response.status === 200) {
-				console.log("인증번호 유효함");
-				setCertificationNumState(CertNumState.CorrectNum);
-			} else {
-				console.log("인증번호 틀림");
-				setCertificationNumState(CertNumState.WrongNum);
-			}
-		});
 	};
 	const handleClickRegister = () => {
+		checkEnableStringPattern(userID, password);
 		if (
 			userIDState === UserIDState.EnableID &&
 			confirmPasswordState === ConfirmPasswordState.CorrectPassword
@@ -173,6 +210,7 @@ function SignUp() {
 							discordID={discordID}
 							certificationNum={certificationNum}
 							requestCertNum={requestCertNum}
+							handleSuccessToRequestCertNum={handleSuccessToRequestCertNum}
 							handleCheckCertNum={handleCheckCertNum}
 							handleChangeDiscordID={handleChangeDiscordID}
 							handleClickRequestCertNum={handleClickRequestCertNum}
@@ -184,10 +222,12 @@ function SignUp() {
 							userID={userID}
 							userIDState={userIDState}
 							password={password}
+							passwordState={passwordState}
 							confirmPassword={confirmPassword}
 							confirmPasswordState={confirmPasswordState}
 							handleChangeUserID={handleChangeUserID}
 							handleCheckUserIDDuplication={handleCheckUserIDDuplication}
+							handleSetUserIDStateNoCheck={handleSetUserIDStateNoCheck}
 							handleChangePassword={handleChangePassword}
 							handleChangeConfirmPassword={handleChangeConfirmPassword}
 							handleClickRegister={handleClickRegister}
