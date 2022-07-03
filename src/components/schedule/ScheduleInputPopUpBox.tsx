@@ -1,4 +1,11 @@
-import { Dialog, DialogActions, Button } from "@mui/material";
+import {
+	Dialog,
+	DialogActions,
+	Button,
+	Typography,
+	DialogContent,
+	DialogTitle,
+} from "@mui/material";
 import { Schedule, ScheduleBody } from "../../type/CommonInterfaces";
 import ScheduleInputBox from "./ScheduleInputBox";
 import { useState, useEffect, useContext } from "react";
@@ -42,6 +49,9 @@ function ScheduleInputPopUpBox({
 	const [isReadOnly, setIsReadOnly] = useState<boolean>(readonly);
 	const { url } = useContext(Context);
 
+	const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
+	const [confirmUpdate, setConfirmUpdate] = useState<boolean>(false);
+
 	useEffect(() => {
 		setIsReadOnly(readonly);
 	}, [readonly]);
@@ -81,6 +91,18 @@ function ScheduleInputPopUpBox({
 		setIsReadOnly(true);
 	};
 
+	const handleOpenConfirmUpdate = () => {
+		setConfirmUpdate(true);
+	};
+	const handleCloseConfirmUpdate = () => {
+		setConfirmUpdate(false);
+	};
+	const handleOpenConfirmDelete = () => {
+		setConfirmDelete(true);
+	};
+	const handleCloseConfirmDelete = () => {
+		setConfirmDelete(false);
+	};
 	const handleDelete = () => {
 		const response = deleteSchedule(url, defaultSchedule.id);
 
@@ -98,6 +120,28 @@ function ScheduleInputPopUpBox({
 				maxWidth: 1000,
 			}}
 		>
+			<Dialog open={confirmDelete} onClose={handleCloseConfirmDelete}>
+				<DialogContent>
+					<Typography>정말 삭제하시겠습니까?</Typography>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleCloseConfirmDelete}>취소</Button>
+					<Button autoFocus onClick={handleDelete}>
+						삭제
+					</Button>
+				</DialogActions>
+			</Dialog>
+			<Dialog open={confirmUpdate} onClose={handleCloseConfirmUpdate}>
+				<DialogContent>
+					<Typography>수정하시겠습니까?</Typography>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleCloseConfirmUpdate}>취소</Button>
+					<Button autoFocus onClick={handleUpdate}>
+						수정
+					</Button>
+				</DialogActions>
+			</Dialog>
 			<ScheduleInputBox
 				title={{ value: title, setValue: setTitle }}
 				startDate={{ value: startDate, setValue: setStartDate }}
@@ -106,11 +150,32 @@ function ScheduleInputPopUpBox({
 				readonly={isReadOnly}
 			></ScheduleInputBox>
 			<DialogActions>
-				{isReadOnly && <Button onClick={handleClickUpdateButton}>수정</Button>}
-				{isReadOnly && <Button onClick={handleDelete}>삭제</Button>}
+				{isReadOnly && (
+					<Button
+						onClick={
+							// handleOpenConfirmUpdate
+							handleClickUpdateButton
+						}
+					>
+						수정
+					</Button>
+				)}
+				{isReadOnly && (
+					<Button
+						onClick={
+							handleOpenConfirmDelete
+							// handleDelete
+						}
+					>
+						삭제
+					</Button>
+				)}
 				{!isReadOnly && (
 					<Button
-						onClick={defaultSchedule.id === 0 ? handleSave : handleUpdate}
+						onClick={
+							defaultSchedule.id === 0 ? handleSave : handleOpenConfirmUpdate
+							//	handleUpdate
+						}
 					>
 						저장
 					</Button>
