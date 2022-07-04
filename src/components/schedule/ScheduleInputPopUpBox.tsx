@@ -89,6 +89,7 @@ function ScheduleInputPopUpBox({
 		onUpdate(newSchedule);
 		// onClose();
 		setIsReadOnly(true);
+		setConfirmUpdate(false);
 	};
 
 	const handleOpenConfirmUpdate = () => {
