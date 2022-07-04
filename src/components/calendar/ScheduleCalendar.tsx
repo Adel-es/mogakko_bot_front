@@ -6,13 +6,6 @@ import { Schedule } from "../../type/CommonInterfaces";
 import { useState, useCallback, useRef, useContext, useEffect } from "react";
 import ScheduleInputPopUpBox from "../schedule/ScheduleInputPopUpBox";
 import { Context, State } from "../../index";
-import {
-	deleteSchedule,
-	getSchedulesByDuration,
-	getSchedulesById,
-	createSchedule,
-	updateSchedule,
-} from "../../utils/api/ScheduleAPI";
 import { getStartAndEndDate } from "../../utils/calendar/CalendarUtils";
 import {
 	createUserProfile,
@@ -20,16 +13,6 @@ import {
 	getUserProfile,
 	updateUserProfile,
 } from "../../utils/api/UserAPI";
-import {
-	checkUserIdDuplication,
-	requestVerificationCode,
-	submitVerificationCode,
-} from "../../utils/api/SignUpAPI";
-import {
-	destroySession,
-	getSessionCookie,
-	logIn,
-} from "../../utils/api/SignInAPI";
 import { Box } from "@mui/material";
 import { CalendarMenu } from "./CalendarMenu";
 
@@ -76,64 +59,23 @@ function ScheduleCalendar({
 	const [endDay, setEndDay] = useState<Date>(new Date());
 	const defaultPropForScheduleBox = useRef<Schedule>(getDefaultSchedule());
 	const { url }: State = useContext(Context);
-	useEffect(() => {
-		//test
-		// const getByDur = getSchedulesByDuration(
-		// 	url,
-		// 	new Date("2022-04-15T09:00:00"),
-		// 	new Date("2022-04-30T09:00:00")
-		// );
-		// console.log(getByDur);
-		// const postResult = postSchedule(url, {
-		//   start: new Date("2022-04-09T09:00:00"),
-		//   end: new Date("2022-04-09T18:00:00"),
-		//   name: "roonm813",
-		//   title: "this is title",
-		//   content: "this is content",
-		// });
-		// console.log(postResult);
-		// const getById = getSchedulesById(url, 1);
-		// console.log(getById);
-		// const updateResponse = updateSchedule(url, {
-		//   id: 1,
-		//   start: new Date("2022-04-09T09:00:00"),
-		//   end: new Date("2022-04-09T18:00:00"),
-		//   name: "roonm813",
-		//   title: "this is title",
-		//   content: "this is content",
-		// });
-		// console.log(updateResponse);
-		// const deleteResponse = deleteSchedule(url, 1);
-		// console.log(deleteResponse);
-		const userId = "roonm813";
-		const pw = "testpassword";
-		const discordId = "538799426479840000";
-		// USER
-		// console.log(createUserProfile(url, userId, pw, discordId));
-		// console.log(
-		// 	getUserProfile(url, userId).then((response) => response.json())
-		// );
-		// console.log(
-		// 	updateUserProfile(url, userId, pw, "update memo").then((response) =>
-		// 		response.json()
-		// 	)
-		// );
-		// console.log(deleteUserProfile(url, userId));
+	// useEffect(() => {
+	// 	const userId = "roonm813";
+	// 	const pw = "testpassword";
+	// 	const discordId = "538799426479840000";
+	// 	// USER
+	// 	console.log(createUserProfile(url, userId, pw, discordId));
+	// 	console.log(
+	// 		getUserProfile(url, userId).then((response) => response.json())
+	// 	);
+	// 	console.log(
+	// 		updateUserProfile(url, userId, pw, "update memo").then((response) =>
+	// 			response.json()
+	// 		)
+	// 	);
+	// 	console.log(deleteUserProfile(url, userId));
 
-		// SignUP
-		// console.log(checkUserIdDuplication(url, userId));
-		// console.log(getVerificationCode(url, discordId));
-		// console.log(submitVerificationCode(url, "asdd"));
-
-		// SignIn
-		// console.log(logIn(url, userId, pw));
-		// console.log(
-		// 	getSessionCookie(url, userId, pw).then((response) =>
-		// 		response.headers.forEach((data) => console.log(data))
-		// 	)
-		// );
-		// console.log(destroySession(url));
-	}, []);
+	// }, []);
 
 	useEffect(() => {
 		onMoveDate(startDay, endDay);
