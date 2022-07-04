@@ -6,8 +6,6 @@ import { Schedule } from "../../type/CommonInterfaces";
 import { useState, useCallback, useRef, useContext, useEffect } from "react";
 import ScheduleInputPopUpBox from "../schedule/ScheduleInputPopUpBox";
 import { Context, State } from "../../index";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AddIcon from "@mui/icons-material/Add";
 import {
 	deleteSchedule,
 	getSchedulesByDuration,
@@ -32,18 +30,8 @@ import {
 	getSessionCookie,
 	logIn,
 } from "../../utils/api/SignInAPI";
-import {
-	Box,
-	Button,
-	Drawer,
-	IconButton,
-	List,
-	ListItem,
-	ListItemText,
-	SpeedDial,
-	SpeedDialAction,
-	SpeedDialIcon,
-} from "@mui/material";
+import { Box } from "@mui/material";
+import { CalendarMenu } from "./CalendarMenu";
 
 const locales = {
 	"en-US": enUS,
@@ -186,81 +174,9 @@ function ScheduleCalendar({
 		}
 	};
 
-	const [mobileOpen, setMobileOpen] = useState<boolean>(false);
-
-	const handleDrawerToggle = () => {
-		setMobileOpen((current) => !current);
-	};
-
-	const menuDrawer = (
-		<div>
-			<List>
-				<ListItem sx={{ justifyContent: "center" }}>
-					<Button variant="contained" onClick={() => addEvent(new Date())}>
-						<AddIcon />
-					</Button>
-				</ListItem>
-			</List>
-		</div>
-	);
-	const actions = [{ icon: <AddIcon />, name: "Add" }];
 	return (
 		<>
-			<SpeedDial
-				ariaLabel="Menu Dial"
-				sx={{ position: "absolute", bottom: 16, right: 16 }}
-				icon={<SpeedDialIcon />}
-			>
-				{actions.map((action) => (
-					<SpeedDialAction
-						key={action.name}
-						icon={action.icon}
-						tooltipTitle={action.name}
-						onClick={() => addEvent(new Date())}
-					/>
-				))}
-			</SpeedDial>
-			<Box
-				component={"nav"}
-				sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-			>
-				<Drawer
-					variant="temporary"
-					open={mobileOpen}
-					onClose={handleDrawerToggle}
-					ModalProps={{ keepMounted: true }}
-					sx={{
-						display: { xs: "block", sm: "none" },
-						"& .MuiDrawer-paper": {
-							boxSizing: "border-box",
-							width: drawerWidth,
-						},
-					}}
-				>
-					{menuDrawer}
-				</Drawer>
-				<Drawer
-					variant="permanent"
-					// sx={{
-					// 	width: drawerWidth,
-					// 	flexShrink: 0,
-					// 	"& .MuiDrawer-paper": {
-					// 		width: drawerWidth,
-					// 		boxSizing: "border-box",
-					// 	},
-					// }}
-					sx={{
-						display: { xs: "none", sm: "block" },
-						"& .MuiDrawer-paper": {
-							boxSizing: "border-box",
-							width: drawerWidth,
-						},
-					}}
-					open
-				>
-					{menuDrawer}
-				</Drawer>
-			</Box>
+			<CalendarMenu addEvent={() => addEvent(new Date())} />
 			<Box
 				component="main"
 				sx={{
